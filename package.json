@@ -15,7 +15,7 @@
       "pre-push": "gulp check --full"
     }
   },
-  "description": "List all available Node.js versions",
+  "description": "Normalize and validate Node.js versions",
   "keywords": [
     "nodejs",
     "node",
@@ -39,7 +39,7 @@
     "bash"
   ],
   "license": "Apache-2.0",
-  "homepage": "https://git.io/fjQj8",
+  "homepage": "https://git.io/fj7eQ",
   "repository": "ehmicky/normalize-node-version",
   "bugs": {
     "url": "https://github.com/ehmicky/normalize-node-version/issues"
