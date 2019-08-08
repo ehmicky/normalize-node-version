@@ -1,0 +1,69 @@
+{
+  "name": "normalize-node-version",
+  "version": "0.0.1",
+  "main": "build/src/main.js",
+  "files": [
+    "build/src",
+    "examples",
+    "!~"
+  ],
+  "scripts": {
+    "test": "gulp test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "gulp check --full"
+    }
+  },
+  "description": "List all available Node.js versions",
+  "keywords": [
+    "nodejs",
+    "node",
+    "nvm",
+    "npx",
+    "versions",
+    "versioning",
+    "exec",
+    "shell",
+    "terminal",
+    "command-line",
+    "cli",
+    "dependency-management",
+    "es6",
+    "javascript",
+    "library",
+    "npmjs",
+    "operating-system",
+    "package-manager",
+    "server",
+    "bash"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://git.io/fjQj8",
+  "repository": "ehmicky/normalize-node-version",
+  "bugs": {
+    "url": "https://github.com/ehmicky/normalize-node-version/issues"
+  },
+  "author": "ehmicky <ehmicky@gmail.com> (https://github.com/ehmicky)",
+  "directories": {
+    "lib": "src",
+    "test": "test"
+  },
+  "dependencies": {
+    "all-node-versions": "0.0.1",
+    "core-js": "^3.1.4",
+    "find-cache-dir": "^3.0.0",
+    "path-exists": "^4.0.0",
+    "semver": "^6.3.0",
+    "signal-exit": "^3.0.2"
+  },
+  "devDependencies": {
+    "ava": "^2.2.0",
+    "gulp": "^4.0.2",
+    "gulp-shared-tasks": "^0.30.33",
+    "husky": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=8.12.0"
+  }
+}
