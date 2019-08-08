@@ -45,6 +45,7 @@ npm install normalize-node-version
 # See also
 
 - [`nve`](https://github.com/ehmicky/nve): Run a specific Node.js version
+- [`download-node`](https://github.com/ehmicky/download-node): Download Node.js
 - [`all-node-versions`](https://github.com/ehmicky/all-node-versions): List all
   available Node.js versions
 
