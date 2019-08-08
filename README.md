@@ -13,6 +13,21 @@ Normalize and validate Node.js versions
 <!-- eslint-skip -->
 
 ```js
+const normalizeNodeVersion = require('normalize-node-version')
+
+await normalizeNodeVersion('8') // '8.16.0'
+
+await normalizeNodeVersion('8.5.0') // '8.5.0'
+
+await normalizeNodeVersion('v8.5.0') // '8.5.0'
+
+await normalizeNodeVersion('8.5.2') // Error: Invalid Node version
+
+await normalizeNodeVersion('<7') // '6.17.1'
+
+await normalizeNodeVersion('*') // Latest Node version, e.g. '12.8.0'
+
+await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
 ```
 
 # Install
@@ -22,6 +37,10 @@ npm install normalize-node-version
 ```
 
 # Usage
+
+## normalizeNodeVersion(versionRange)
+
+`versionRange`: `string`<br> _Returns_: `Promise<string>`
 
 # See also
 
