@@ -4,8 +4,7 @@ import { promisify } from 'util'
 import pathExists from 'path-exists'
 import { clean as cleanRange, maxSatisfying, ltr } from 'semver'
 import findCacheDir from 'find-cache-dir'
-
-import { cleanupOnError } from './cleanup.js'
+import cleanWrite from 'clean-write'
 
 const pReadFile = promisify(readFile)
 const pWriteFile = promisify(writeFile)
@@ -54,7 +53,7 @@ const isLatestVersion = function(versionRange, versions) {
 export const cacheVersions = async function(versions) {
   const versionsStr = JSON.stringify(versions, null, 2)
 
-  await cleanupOnError(
+  await cleanWrite(
     () => pWriteFile(VERSIONS_CACHE, versionsStr),
     VERSIONS_CACHE,
   )
