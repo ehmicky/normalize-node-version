@@ -30,7 +30,7 @@ jobs:
       script: gulp publish
       # NPM_TOKEN environment variable
       env:
-        secure: ''
+        secure: '1zs6K3T2TOKCBjsTeF1AYglNSIbnuPe7YfJ9lZ7HTWi79qfr8eicOpLcWSMFaUnvmDh7rp0Vk1coNk1CmhXY6yspj2tCebzKfdFIm7rCbUSwBOiOMwq0hcw72anR+CZYYaYoMP8XMfmtXh9rX3hYTrkxxIQ1OLcZrTh6PDy5ALhYKSY8RF3qWUm6lttEOG4v+ly0liiEbA6lvvi6xZoitGdSMWuEU4J/vSPFCqJRJVbqa6ydR8qzutszrTGx0pUp4xfAMnEWq0lgIcvkUmOUtpLul6mDy+s6O5E+Wg9Fj/HT+GTSzox06Pprr3hH0vmv6nvTk2ePKfm7dRhnzONr8dP1SvMbYLOqb7UlmM49JcpZixBdnqk0a0ezBAXwO1o6OewMGeAv5bgizJ6ebzlQnPbc2F+SqMuVJARbvYtyGaiEDjQ2qyGnWbnyUVteq9FdEg3SBMxkE1si0srTfn9p0nIvgW35EJHeyPbrlEJxiyaaS/2cBhINTI1IBuQ6LvEE+fjnmVQbMSBrAzgMEEam+pWF3A8QHC0crLRi2N0nSPmKkcLkIvy4keLBXhouoqVypCIzdUfjo+D2a7VFUcFKKMawNd6yMDMpeBGnwjCnsOwLn8TV6H+TfJB71taGlkdAP0UMumeS971EDunWc2XQezze8gduh3uuNcq8rzFxSfs='
 notifications:
   webhooks:
     - https://www.travisbuddy.com?only=failed,errored&insertMode=update
