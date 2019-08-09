@@ -19,13 +19,17 @@ const setCacheFile = async function(versions) {
 
   const cacheFile = `${cacheDir}/${cacheFilename}`
 
-  await pWriteFile(cacheFile, JSON.stringify(versions))
+  if (versions !== undefined) {
+    await pWriteFile(cacheFile, JSON.stringify(versions))
+  }
 
   return cacheFile
 }
 
-const unsetCacheFile = async function(cacheFile) {
-  await pUnlink(cacheFile)
+const unsetCacheFile = async function(cacheFile, { cleanup = true } = {}) {
+  if (cleanup) {
+    await pUnlink(cacheFile)
+  }
 
   // eslint-disable-next-line fp/no-delete
   delete env.TEST_CACHE_FILE
@@ -39,4 +43,14 @@ test.serial('Cached file', async t => {
   t.is(version, '1.2.3')
 
   await unsetCacheFile(cacheFile)
+})
+
+test.serial('No cache', async t => {
+  const cacheFile = await setCacheFile()
+
+  const version = await normalizeNodeVersion('4')
+
+  t.is(version, '4.9.1')
+
+  await unsetCacheFile(cacheFile, { cleanup: false })
 })

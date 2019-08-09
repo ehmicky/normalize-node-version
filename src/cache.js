@@ -16,7 +16,7 @@ const pReadFile = promisify(readFile)
 // `GLOBAL_CACHE_DIR/normalize-node-version/versions.json`.
 // Also we also cache it in-memory so it's performed only once per process.
 export const getCachedVersions = async function(versionRange) {
-  if (currentCachedVersions !== undefined) {
+  if (currentCachedVersions !== undefined && !env.TEST_CACHE_FILENAME) {
     return { cachedVersions: currentCachedVersions }
   }
 
