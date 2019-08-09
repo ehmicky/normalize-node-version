@@ -84,3 +84,16 @@ test.serial('No cached file', async t => {
 
   await unsetCacheFile(cacheFile, { cleanup: false })
 })
+
+test('Success', async t => {
+  const version = await normalizeNodeVersion('4')
+
+  t.is(version, '4.9.1')
+})
+
+test('Twice in the same process', async t => {
+  await normalizeNodeVersion('4')
+  const version = await normalizeNodeVersion('4')
+
+  t.is(version, '4.9.1')
+})
