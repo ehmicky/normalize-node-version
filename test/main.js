@@ -4,6 +4,7 @@ import { promisify } from 'util'
 
 import test from 'ava'
 import globalCacheDir from 'global-cache-dir'
+import { each } from 'test-each'
 
 import normalizeNodeVersion from '../src/main.js'
 
@@ -96,4 +97,10 @@ test('Twice in the same process', async t => {
   const version = await normalizeNodeVersion('4')
 
   t.is(version, '4.9.1')
+})
+
+each([undefined, 'not_a_version_range'], ({ title }, versionRange) => {
+  test(`Invalid input | ${title}`, async t => {
+    await t.throwsAsync(normalizeNodeVersion(versionRange))
+  })
 })
