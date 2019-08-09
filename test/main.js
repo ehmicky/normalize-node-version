@@ -107,7 +107,7 @@ each(['4.*', '<5'], ({ title }, versionRange) => {
   })
 })
 
-each([undefined, 'not_a_version_range'], ({ title }, versionRange) => {
+each([undefined, 'not_a_version_range', '50'], ({ title }, versionRange) => {
   test(`Invalid input | ${title}`, async t => {
     await t.throwsAsync(normalizeNodeVersion(versionRange))
   })
