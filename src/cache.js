@@ -3,39 +3,52 @@ import { promisify } from 'util'
 
 import pathExists from 'path-exists'
 import { clean as cleanRange, maxSatisfying, ltr } from 'semver'
-import findCacheDir from 'find-cache-dir'
 import writeFileAtomic from 'write-file-atomic'
+import globalCacheDir from 'global-cache-dir'
 
 const pReadFile = promisify(readFile)
-
-const CACHE_DIR = findCacheDir({ name: 'normalize-node-version', create: true })
-const VERSIONS_CACHE = `${CACHE_DIR}/versions.json`
-
-// eslint-disable-next-line fp/no-let, init-declarations
-let currentCachedVersions
 
 // We cache the HTTP request. The cache needs to be invalidated sometimes since
 // new Node versions are made available every week. We only invalidate it when
 // the requested `versionRange` targets the latest Node version.
 // The cache is persisted to
-// `./node_modules/.cache/normalize-node-version/versions.json`.
+// `GLOBAL_CACHE_DIR/normalize-node-version/versions.json`.
 // Also we also cache it in-memory so it's performed only once per process.
 export const getCachedVersions = async function(versionRange) {
   if (currentCachedVersions !== undefined) {
-    return currentCachedVersions
+    return { cachedVersions: currentCachedVersions }
   }
 
-  if (!(await pathExists(VERSIONS_CACHE))) {
+  const cacheFile = await getCacheFile()
+  const cachedVersions = await getCachedContent(cacheFile, versionRange)
+  return { cachedVersions, cacheFile }
+}
+
+// eslint-disable-next-line fp/no-let, init-declarations
+let currentCachedVersions
+
+const getCacheFile = async function() {
+  const cacheDir = await globalCacheDir(CACHE_DIR)
+  return `${cacheDir}/${CACHE_FILE}`
+}
+
+const CACHE_DIR = 'normalize-node-version'
+const CACHE_FILE = 'versions.json'
+
+const getCachedContent = async function(cacheFile, versionRange) {
+  if (!(await pathExists(cacheFile))) {
     return
   }
 
-  const versionsStr = await pReadFile(VERSIONS_CACHE, 'utf8')
+  const versionsStr = await pReadFile(cacheFile, 'utf8')
   const versions = JSON.parse(versionsStr)
 
   if (isLatestVersion(versionRange, versions)) {
     return
   }
 
+  // eslint-disable-next-line fp/no-mutation
+  currentCachedVersions = versions
   return versions
 }
 
@@ -49,10 +62,10 @@ const isLatestVersion = function(versionRange, versions) {
 }
 
 // Persist the cached versions
-export const cacheVersions = async function(versions) {
+export const cacheVersions = async function(versions, cacheFile) {
   const versionsStr = `${JSON.stringify(versions, null, 2)}\n`
 
-  await writeFileAtomic(VERSIONS_CACHE, versionsStr)
+  await writeFileAtomic(cacheFile, versionsStr)
 
   // eslint-disable-next-line fp/no-mutation
   currentCachedVersions = versions

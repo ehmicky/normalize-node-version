@@ -52,7 +52,7 @@
   "dependencies": {
     "all-node-versions": "^0.0.2",
     "core-js": "^3.2.0",
-    "find-cache-dir": "^3.0.0",
+    "global-cache-dir": "0.0.2",
     "path-exists": "^4.0.0",
     "semver": "^6.3.0",
     "write-file-atomic": "^3.0.0"
