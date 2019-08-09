@@ -99,6 +99,14 @@ test('Twice in the same process', async t => {
   t.is(version, '4.9.1')
 })
 
+each(['4.*', '<5'], ({ title }, versionRange) => {
+  test(`Versions range | ${title}`, async t => {
+    const version = await normalizeNodeVersion(versionRange)
+
+    t.is(version, '4.9.1')
+  })
+})
+
 each([undefined, 'not_a_version_range'], ({ title }, versionRange) => {
   test(`Invalid input | ${title}`, async t => {
     await t.throwsAsync(normalizeNodeVersion(versionRange))
