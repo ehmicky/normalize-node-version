@@ -1,5 +1,6 @@
 import { readFile } from 'fs'
 import { promisify } from 'util'
+import { env } from 'process'
 
 import pathExists from 'path-exists'
 import { clean as cleanRange, maxSatisfying, ltr } from 'semver'
@@ -28,12 +29,13 @@ export const getCachedVersions = async function(versionRange) {
 let currentCachedVersions
 
 const getCacheFile = async function() {
+  const cacheFilename = env.TEST_CACHE_FILENAME || CACHE_FILENAME
   const cacheDir = await globalCacheDir(CACHE_DIR)
-  return `${cacheDir}/${CACHE_FILE}`
+  return `${cacheDir}/${cacheFilename}`
 }
 
 const CACHE_DIR = 'normalize-node-version'
-const CACHE_FILE = 'versions.json'
+const CACHE_FILENAME = 'versions.json'
 
 const getCachedContent = async function(cacheFile, versionRange) {
   if (!(await pathExists(cacheFile))) {

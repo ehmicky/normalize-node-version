@@ -1,5 +1,42 @@
-import test from 'ava'
+import { env } from 'process'
+import { writeFile, unlink } from 'fs'
+import { promisify } from 'util'
 
-test('Dummy test', t => {
-  t.pass()
+import test from 'ava'
+import globalCacheDir from 'global-cache-dir'
+
+import normalizeNodeVersion from '../src/main.js'
+
+const pWriteFile = promisify(writeFile)
+const pUnlink = promisify(unlink)
+
+const setCacheFile = async function(versions) {
+  const cacheFilename = String(Math.random()).replace('.', '')
+  // eslint-disable-next-line fp/no-mutation
+  env.TEST_CACHE_FILENAME = cacheFilename
+
+  const cacheDir = await globalCacheDir('normalize-node-version')
+
+  const cacheFile = `${cacheDir}/${cacheFilename}`
+
+  await pWriteFile(cacheFile, JSON.stringify(versions))
+
+  return cacheFile
+}
+
+const unsetCacheFile = async function(cacheFile) {
+  await pUnlink(cacheFile)
+
+  // eslint-disable-next-line fp/no-delete
+  delete env.TEST_CACHE_FILE
+}
+
+test.serial('Cached file', async t => {
+  const cacheFile = await setCacheFile(['2.0.0', '1.2.3'])
+
+  const version = await normalizeNodeVersion('1')
+
+  t.is(version, '1.2.3')
+
+  await unsetCacheFile(cacheFile)
 })
