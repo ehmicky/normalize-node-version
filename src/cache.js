@@ -51,7 +51,7 @@ const isLatestVersion = function(versionRange, versions) {
 
 // Persist the cached versions
 export const cacheVersions = async function(versions) {
-  const versionsStr = JSON.stringify(versions, null, 2)
+  const versionsStr = `${JSON.stringify(versions, null, 2)}\n`
 
   await cleanWrite(
     () => pWriteFile(VERSIONS_CACHE, versionsStr),
