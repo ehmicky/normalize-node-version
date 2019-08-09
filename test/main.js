@@ -33,7 +33,7 @@ const unsetCacheFile = async function(cacheFile, { cleanup = true } = {}) {
   }
 
   // eslint-disable-next-line fp/no-delete
-  delete env.TEST_CACHE_FILE
+  delete env.TEST_CACHE_FILENAME
 }
 
 test.serial('Cached file', async t => {
