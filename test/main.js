@@ -36,6 +36,33 @@ const unsetCacheFile = async function(cacheFile, { cleanup = true } = {}) {
   delete env.TEST_CACHE_FILENAME
 }
 
+each(['4.*', '<5'], ({ title }, versionRange) => {
+  test(`Versions range | ${title}`, async t => {
+    const version = await normalizeNodeVersion(versionRange)
+
+    t.is(version, '4.9.1')
+  })
+})
+
+each([undefined, 'not_a_version_range', '50'], ({ title }, versionRange) => {
+  test(`Invalid input | ${title}`, async t => {
+    await t.throwsAsync(normalizeNodeVersion(versionRange))
+  })
+})
+
+test('Success', async t => {
+  const version = await normalizeNodeVersion('4')
+
+  t.is(version, '4.9.1')
+})
+
+test('Twice in the same process', async t => {
+  await normalizeNodeVersion('4')
+  const version = await normalizeNodeVersion('4')
+
+  t.is(version, '4.9.1')
+})
+
 test.serial('Cached file', async t => {
   const cacheFile = await setCacheFile(['4.0.0', '1.2.3'])
 
@@ -84,31 +111,4 @@ test.serial('No cached file', async t => {
   t.is(version, '4.9.1')
 
   await unsetCacheFile(cacheFile, { cleanup: false })
-})
-
-test('Success', async t => {
-  const version = await normalizeNodeVersion('4')
-
-  t.is(version, '4.9.1')
-})
-
-test('Twice in the same process', async t => {
-  await normalizeNodeVersion('4')
-  const version = await normalizeNodeVersion('4')
-
-  t.is(version, '4.9.1')
-})
-
-each(['4.*', '<5'], ({ title }, versionRange) => {
-  test(`Versions range | ${title}`, async t => {
-    const version = await normalizeNodeVersion(versionRange)
-
-    t.is(version, '4.9.1')
-  })
-})
-
-each([undefined, 'not_a_version_range', '50'], ({ title }, versionRange) => {
-  test(`Invalid input | ${title}`, async t => {
-    await t.throwsAsync(normalizeNodeVersion(versionRange))
-  })
 })
