@@ -1,6 +1,6 @@
 {
   "name": "normalize-node-version",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "build/src/main.js",
   "files": [
     "build/src",
