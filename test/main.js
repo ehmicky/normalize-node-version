@@ -36,7 +36,7 @@ const unsetCacheFile = async function(cacheFile, { cleanup = true } = {}) {
 }
 
 test.serial('Cached file', async t => {
-  const cacheFile = await setCacheFile(['2.0.0', '1.2.3'])
+  const cacheFile = await setCacheFile(['4.0.0', '1.2.3'])
 
   const version = await normalizeNodeVersion('1')
 
@@ -45,7 +45,17 @@ test.serial('Cached file', async t => {
   await unsetCacheFile(cacheFile)
 })
 
-test.serial('No cache', async t => {
+test.serial('Cached file but latest version', async t => {
+  const cacheFile = await setCacheFile(['4.0.0', '1.2.3'])
+
+  const version = await normalizeNodeVersion('4')
+
+  t.is(version, '4.9.1')
+
+  await unsetCacheFile(cacheFile)
+})
+
+test.serial('No cached file', async t => {
   const cacheFile = await setCacheFile()
 
   const version = await normalizeNodeVersion('4')
