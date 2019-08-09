@@ -1,13 +1,12 @@
-import { readFile, writeFile } from 'fs'
+import { readFile } from 'fs'
 import { promisify } from 'util'
 
 import pathExists from 'path-exists'
 import { clean as cleanRange, maxSatisfying, ltr } from 'semver'
 import findCacheDir from 'find-cache-dir'
-import cleanWrite from 'clean-write'
+import writeFileAtomic from 'write-file-atomic'
 
 const pReadFile = promisify(readFile)
-const pWriteFile = promisify(writeFile)
 
 const CACHE_DIR = findCacheDir({ name: 'normalize-node-version', create: true })
 const VERSIONS_CACHE = `${CACHE_DIR}/versions.json`
@@ -53,10 +52,7 @@ const isLatestVersion = function(versionRange, versions) {
 export const cacheVersions = async function(versions) {
   const versionsStr = `${JSON.stringify(versions, null, 2)}\n`
 
-  await cleanWrite(
-    () => pWriteFile(VERSIONS_CACHE, versionsStr),
-    VERSIONS_CACHE,
-  )
+  await writeFileAtomic(VERSIONS_CACHE, versionsStr)
 
   // eslint-disable-next-line fp/no-mutation
   currentCachedVersions = versions

@@ -55,7 +55,8 @@
     "core-js": "^3.2.0",
     "find-cache-dir": "^3.0.0",
     "path-exists": "^4.0.0",
-    "semver": "^6.3.0"
+    "semver": "^6.3.0",
+    "write-file-atomic": "^3.0.0"
   },
   "devDependencies": {
     "ava": "^2.2.0",
