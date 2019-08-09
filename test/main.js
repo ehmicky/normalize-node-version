@@ -1,40 +1,9 @@
-import { env } from 'process'
-import { writeFile, unlink } from 'fs'
-import { promisify } from 'util'
-
 import test from 'ava'
-import globalCacheDir from 'global-cache-dir'
 import { each } from 'test-each'
 
 import normalizeNodeVersion from '../src/main.js'
 
-const pWriteFile = promisify(writeFile)
-const pUnlink = promisify(unlink)
-
-const setCacheFile = async function(versions) {
-  const cacheFilename = String(Math.random()).replace('.', '')
-  // eslint-disable-next-line fp/no-mutation
-  env.TEST_CACHE_FILENAME = cacheFilename
-
-  const cacheDir = await globalCacheDir('normalize-node-version')
-
-  const cacheFile = `${cacheDir}/${cacheFilename}`
-
-  if (versions !== undefined) {
-    await pWriteFile(cacheFile, JSON.stringify(versions))
-  }
-
-  return cacheFile
-}
-
-const unsetCacheFile = async function(cacheFile, { cleanup = true } = {}) {
-  if (cleanup) {
-    await pUnlink(cacheFile)
-  }
-
-  // eslint-disable-next-line fp/no-delete
-  delete env.TEST_CACHE_FILENAME
-}
+import { setCacheFile, unsetCacheFile } from './helpers/cache.js'
 
 each(['4.*', '<5'], ({ title }, versionRange) => {
   test(`Versions range | ${title}`, async t => {
