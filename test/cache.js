@@ -26,13 +26,23 @@ each(
   ],
   ({ title }, { cache, input, output }) => {
     test.serial(`Cached file | ${title}`, async t => {
-      const cacheFile = await setCacheFile(cache)
+      const cacheFilename = String(Math.random()).replace('.', '')
+      // eslint-disable-next-line fp/no-mutation
+      env.TEST_CACHE_FILENAME = cacheFilename
+
+      const cacheDir = await globalCacheDir('normalize-node-version')
+
+      const cacheFile = `${cacheDir}/${cacheFilename}`
+
+      if (cache !== undefined) {
+        await pWriteFile(cacheFile, JSON.stringify(cache))
+      }
 
       const version = await normalizeNodeVersion(input)
 
       t.is(version, output)
 
-      if (cacheFile !== undefined) {
+      if (cache !== undefined) {
         await pUnlink(cacheFile)
       }
 
@@ -41,19 +51,3 @@ each(
     })
   },
 )
-
-const setCacheFile = async function(versions) {
-  const cacheFilename = String(Math.random()).replace('.', '')
-  // eslint-disable-next-line fp/no-mutation
-  env.TEST_CACHE_FILENAME = cacheFilename
-
-  const cacheDir = await globalCacheDir('normalize-node-version')
-
-  const cacheFile = `${cacheDir}/${cacheFilename}`
-
-  if (versions !== undefined) {
-    await pWriteFile(cacheFile, JSON.stringify(versions))
-  }
-
-  return cacheFile
-}
