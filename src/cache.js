@@ -67,7 +67,13 @@ const isLatestVersion = function(versionRange, versions) {
 export const cacheVersions = async function(versions, cacheFile) {
   const versionsStr = `${JSON.stringify(versions, null, 2)}\n`
 
-  await writeFileAtomic(cacheFile, versionsStr)
+  try {
+    await writeFileAtomic(cacheFile, versionsStr)
+    // If two different functions are calling `normalize-node-versions` at the
+    // same time and there's no cache file, they will both try to persist the
+    // file and one might fail, especially on Windows (with EPERM lock file
+    // errors)
+  } catch {}
 
   // eslint-disable-next-line fp/no-mutation
   currentCachedVersions = versions
