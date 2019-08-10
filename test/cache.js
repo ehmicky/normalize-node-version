@@ -18,21 +18,26 @@ const pUnlink = promisify(unlink)
 //    the other tests
 each(
   [
-    { cacheFile: undefined, input: '4', output: '4.9.1' },
-    { cacheFile: ['4.0.0', '1.2.3'], input: '1', output: '1.2.3' },
-    { cacheFile: ['4.0.0', '1.2.3'], input: '4.0.0', output: '4.0.0' },
-    { cacheFile: ['4.0.0', '1.2.3'], input: '4', output: '4.9.1' },
-    { cacheFile: ['3.0.0', '1.2.3'], input: '4', output: '4.9.1' },
+    { cache: undefined, input: '4', output: '4.9.1' },
+    { cache: ['4.0.0', '1.2.3'], input: '1', output: '1.2.3' },
+    { cache: ['4.0.0', '1.2.3'], input: '4.0.0', output: '4.0.0' },
+    { cache: ['4.0.0', '1.2.3'], input: '4', output: '4.9.1' },
+    { cache: ['3.0.0', '1.2.3'], input: '4', output: '4.9.1' },
   ],
-  ({ title }, { cacheFile, input, output }) => {
+  ({ title }, { cache, input, output }) => {
     test.serial(`Cached file | ${title}`, async t => {
-      const cacheFileA = await setCacheFile(cacheFile)
+      const cacheFile = await setCacheFile(cache)
 
       const version = await normalizeNodeVersion(input)
 
       t.is(version, output)
 
-      await unsetCacheFile(cacheFileA, { cleanup: cacheFile !== undefined })
+      if (cacheFile !== undefined) {
+        await pUnlink(cacheFile)
+      }
+
+      // eslint-disable-next-line fp/no-delete
+      delete env.TEST_CACHE_FILENAME
     })
   },
 )
@@ -51,13 +56,4 @@ const setCacheFile = async function(versions) {
   }
 
   return cacheFile
-}
-
-const unsetCacheFile = async function(cacheFile, { cleanup = true } = {}) {
-  if (cleanup) {
-    await pUnlink(cacheFile)
-  }
-
-  // eslint-disable-next-line fp/no-delete
-  delete env.TEST_CACHE_FILENAME
 }
