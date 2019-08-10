@@ -31,7 +31,8 @@ each(
   ],
   ({ title }, { cache, input, output }) => {
     test.serial(`Caching | ${title}`, async t => {
-      setCache()
+      // eslint-disable-next-line fp/no-mutation
+      env.TEST_CACHE_FILENAME = String(Math.random()).replace('.', '')
 
       const cacheDir = await globalCacheDir('normalize-node-version')
       const cacheFile = `${cacheDir}/${env.TEST_CACHE_FILENAME}`
@@ -46,17 +47,8 @@ each(
 
       await pUnlink(cacheFile)
 
-      unsetCache()
+      // eslint-disable-next-line fp/no-delete
+      delete env.TEST_CACHE_FILENAME
     })
   },
 )
-
-const setCache = function() {
-  // eslint-disable-next-line fp/no-mutation
-  env.TEST_CACHE_FILENAME = String(Math.random()).replace('.', '')
-}
-
-const unsetCache = function() {
-  // eslint-disable-next-line fp/no-delete
-  delete env.TEST_CACHE_FILENAME
-}
