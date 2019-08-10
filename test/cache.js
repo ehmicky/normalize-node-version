@@ -11,21 +11,6 @@ import normalizeNodeVersion from '../src/main.js'
 const pWriteFile = promisify(writeFile)
 const pUnlink = promisify(unlink)
 
-test.serial('No cached file', async t => {
-  setCache()
-
-  const cacheDir = await globalCacheDir('normalize-node-version')
-  const cacheFile = `${cacheDir}/${env.TEST_CACHE_FILENAME}`
-
-  const version = await normalizeNodeVersion('4')
-
-  t.is(version, '4.9.1')
-
-  await pUnlink(cacheFile)
-
-  unsetCache()
-})
-
 // This uses a global environment variable to manipulate the cache file.
 // Since this is global we:
 //  - must use `test.serial()`
@@ -33,6 +18,8 @@ test.serial('No cached file', async t => {
 //    the other tests
 each(
   [
+    // No cache
+    { cache: undefined, input: '4', output: '4.9.1' },
     // Non-last version -> cache
     { cache: ['4.0.0', '1.2.3'], input: '1', output: '1.2.3' },
     // Last version but no range -> cache
@@ -43,13 +30,15 @@ each(
     { cache: ['3.0.0', '1.2.3'], input: '4', output: '4.9.1' },
   ],
   ({ title }, { cache, input, output }) => {
-    test.serial(`Cached file | ${title}`, async t => {
+    test.serial(`Caching | ${title}`, async t => {
       setCache()
 
       const cacheDir = await globalCacheDir('normalize-node-version')
       const cacheFile = `${cacheDir}/${env.TEST_CACHE_FILENAME}`
 
-      await pWriteFile(cacheFile, JSON.stringify(cache))
+      if (cache !== undefined) {
+        await pWriteFile(cacheFile, JSON.stringify(cache))
+      }
 
       const version = await normalizeNodeVersion(input)
 
