@@ -14,9 +14,14 @@ const pUnlink = promisify(unlink)
 test.serial('No cached file', async t => {
   setCache()
 
+  const cacheDir = await globalCacheDir('normalize-node-version')
+  const cacheFile = `${cacheDir}/${env.TEST_CACHE_FILENAME}`
+
   const version = await normalizeNodeVersion('4')
 
   t.is(version, '4.9.1')
+
+  await pUnlink(cacheFile)
 
   unsetCache()
 })
