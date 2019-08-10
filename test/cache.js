@@ -26,13 +26,7 @@ each(
   ],
   ({ title }, { cache, input, output }) => {
     test.serial(`Cached file | ${title}`, async t => {
-      const cacheFilename = String(Math.random()).replace('.', '')
-      // eslint-disable-next-line fp/no-mutation
-      env.TEST_CACHE_FILENAME = cacheFilename
-
-      const cacheDir = await globalCacheDir('normalize-node-version')
-
-      const cacheFile = `${cacheDir}/${cacheFilename}`
+      const cacheFile = await getCacheFile()
 
       if (cache !== undefined) {
         await pWriteFile(cacheFile, JSON.stringify(cache))
@@ -51,3 +45,14 @@ each(
     })
   },
 )
+
+const getCacheFile = async function() {
+  const cacheFilename = String(Math.random()).replace('.', '')
+  // eslint-disable-next-line fp/no-mutation
+  env.TEST_CACHE_FILENAME = cacheFilename
+
+  const cacheDir = await globalCacheDir('normalize-node-version')
+
+  const cacheFile = `${cacheDir}/${cacheFilename}`
+  return cacheFile
+}
