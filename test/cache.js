@@ -1,55 +1,27 @@
 import test from 'ava'
+import { each } from 'test-each'
 
 import normalizeNodeVersion from '../src/main.js'
 
 import { setCacheFile, unsetCacheFile } from './helpers/cache.js'
 
-test.serial('No cached file', async t => {
-  const cacheFile = await setCacheFile()
+each(
+  [
+    { cacheFile: undefined, input: '4', output: '4.9.1' },
+    { cacheFile: ['4.0.0', '1.2.3'], input: '1', output: '1.2.3' },
+    { cacheFile: ['4.0.0', '1.2.3'], input: '4.0.0', output: '4.0.0' },
+    { cacheFile: ['4.0.0', '1.2.3'], input: '4', output: '4.9.1' },
+    { cacheFile: ['3.0.0', '1.2.3'], input: '4', output: '4.9.1' },
+  ],
+  ({ title }, { cacheFile, input, output }) => {
+    test.serial(`Cached file | ${title}`, async t => {
+      const cacheFileA = await setCacheFile(cacheFile)
 
-  const version = await normalizeNodeVersion('4')
+      const version = await normalizeNodeVersion(input)
 
-  t.is(version, '4.9.1')
+      t.is(version, output)
 
-  await unsetCacheFile(cacheFile, { cleanup: false })
-})
-
-test.serial('Cached file with non-latest version', async t => {
-  const cacheFile = await setCacheFile(['4.0.0', '1.2.3'])
-
-  const version = await normalizeNodeVersion('1')
-
-  t.is(version, '1.2.3')
-
-  await unsetCacheFile(cacheFile)
-})
-
-test.serial('Cached file with latest precise version', async t => {
-  const cacheFile = await setCacheFile(['4.0.0', '1.2.3'])
-
-  const version = await normalizeNodeVersion('4.0.0')
-
-  t.is(version, '4.0.0')
-
-  await unsetCacheFile(cacheFile)
-})
-
-test.serial('Cached file with latest version range', async t => {
-  const cacheFile = await setCacheFile(['4.0.0', '1.2.3'])
-
-  const version = await normalizeNodeVersion('4')
-
-  t.is(version, '4.9.1')
-
-  await unsetCacheFile(cacheFile)
-})
-
-test.serial('Cached file with above version range', async t => {
-  const cacheFile = await setCacheFile(['3.0.0', '1.2.3'])
-
-  const version = await normalizeNodeVersion('4')
-
-  t.is(version, '4.9.1')
-
-  await unsetCacheFile(cacheFile)
-})
+      await unsetCacheFile(cacheFileA, { cleanup: cacheFile !== undefined })
+    })
+  },
+)
