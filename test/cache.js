@@ -5,6 +5,11 @@ import normalizeNodeVersion from '../src/main.js'
 
 import { setCacheFile, unsetCacheFile } from './helpers/cache.js'
 
+// This uses a global environment variable to manipulate the cache file.
+// Since this is global we:
+//  - must use `test.serial()`
+//  - must be done in a separate test file so it's in a different process than
+//    the other tests
 each(
   [
     { cacheFile: undefined, input: '4', output: '4.9.1' },
