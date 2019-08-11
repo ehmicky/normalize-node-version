@@ -69,7 +69,7 @@ export const cacheVersions = async function(versions, cacheFile) {
 
   try {
     await writeFileAtomic(cacheFile, versionsStr)
-    // If two different functions are calling `normalize-node-versions` at the
+    // If two different functions are calling `normalize-node-version` at the
     // same time and there's no cache file, they will both try to persist the
     // file and one might fail, especially on Windows (with EPERM lock file
     // errors)
