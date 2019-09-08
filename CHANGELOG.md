@@ -1,8 +1,14 @@
+# 2.0.1
+
+## Bug
+
+- Fix cache invalidation bug
+
 # 2.0.0
 
 ## Features
 
-- Retry downloading the Node.js index file on network errors.
+- Retry downloading the Node.js index file on network errors
 
 # 1.0.1
 
