@@ -3,7 +3,7 @@ import { promisify } from 'util'
 import { env } from 'process'
 
 import pathExists from 'path-exists'
-import { clean as cleanRange, maxSatisfying, ltr } from 'semver'
+import { clean, maxSatisfying, major } from 'semver'
 import writeFileAtomic from 'write-file-atomic'
 import globalCacheDir from 'global-cache-dir'
 
@@ -45,7 +45,7 @@ const getCachedContent = async function(cacheFile, versionRange) {
   const versionsStr = await pReadFile(cacheFile, 'utf8')
   const versions = JSON.parse(versionsStr)
 
-  if (isLatestVersion(versionRange, versions)) {
+  if (!isCachedVersion(versionRange, versions)) {
     return
   }
 
@@ -54,13 +54,27 @@ const getCachedContent = async function(cacheFile, versionRange) {
   return versions
 }
 
-// If latest is 12.8.0, `versionRange` `12.8` should invalid cache, but not
-// `12.8.0`. `13` should also invalidate it.
-const isLatestVersion = function(versionRange, versions) {
-  const matchesLatest =
-    cleanRange(versionRange) === null &&
-    maxSatisfying(versions, versionRange) === versions[0]
-  return matchesLatest || ltr(versions[0], versionRange)
+// We invalidate cache if:
+//  - the version is missing
+//  - the version is a range matching the last version of a major release.
+//    E.g. `12` matches the last `12.*.*` but new versions might have been
+//    releases.
+const isCachedVersion = function(versionRange, versions) {
+  const version = maxSatisfying(versions, versionRange)
+  const isMissing = version === null
+  return (
+    !isMissing && !(isRange(versionRange) && isLastVersion(version, versions))
+  )
+}
+
+const isRange = function(versionRange) {
+  return clean(versionRange) === null
+}
+
+const isLastVersion = function(version, versions) {
+  const majorVersion = major(version)
+  const maxVersion = versions.find(versionA => major(versionA) === majorVersion)
+  return version === maxVersion
 }
 
 // Persist the cached versions

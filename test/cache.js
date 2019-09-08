@@ -21,7 +21,7 @@ each(
     // No cache
     { cache: undefined, input: '4', output: '4.9.1' },
     // Non-last version -> cache
-    { cache: ['4.0.0', '1.2.3'], input: '1', output: '1.2.3' },
+    { cache: ['4.0.0', '1.2.3', '1.1.3'], input: '1.1', output: '1.1.3' },
     // Last version but no range -> cache
     { cache: ['4.0.0', '1.2.3'], input: '4.0.0', output: '4.0.0' },
     // Last version with range -> no cache
