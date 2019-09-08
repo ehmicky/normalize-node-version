@@ -1,6 +1,6 @@
 # 2.0.1
 
-## Bug
+## Bugs
 
 - Fix cache invalidation bug
 
