@@ -22,6 +22,10 @@ await normalizeNodeVersion('8.5.2') // Error: Invalid Node version
 await normalizeNodeVersion('<7') // '6.17.1'
 await normalizeNodeVersion('*') // Latest Node version, e.g. '12.8.0'
 await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
+
+await normalizeNodeVersion('8', {
+  mirror: 'https://npm.taobao.org/mirrors/node',
+})
 ```
 
 # Install
@@ -32,9 +36,21 @@ npm install normalize-node-version
 
 # Usage
 
-## normalizeNodeVersion(versionRange)
+## normalizeNodeVersion(versionRange, options?)
 
-`versionRange`: `string`<br> _Returns_: `Promise<string>`
+`versionRange`: `string`<br> `options`: `object`<br> _Returns_:
+`Promise<string>`
+
+### options
+
+#### mirror
+
+_Type_: `string`<br>_Default_: `https://nodejs.org/dist`
+
+Base URL. Can be customized (for example `https://npm.taobao.org/mirrors/node`).
+
+The following environment variables can also be used: `NODE_MIRROR`,
+`NVM_NODEJS_ORG_MIRROR`, `N_NODE_MIRROR` or `NODIST_NODE_MIRROR`.
 
 # See also
 

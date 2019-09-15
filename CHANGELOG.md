@@ -1,3 +1,10 @@
+# 2.2.0
+
+## Features
+
+- Add
+  [`mirror` option](https://github.com/ehmicky/normalize-node-version#mirror)
+
 # 2.1.0
 
 ## Features

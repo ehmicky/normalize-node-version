@@ -4,8 +4,8 @@ import { maxSatisfying } from 'semver'
 import { getCachedVersions, cacheVersions } from './cache.js'
 
 // Retrieve the Node version matching a specific `versionRange`
-const normalizeNodeVersion = async function(versionRange) {
-  const versions = await getVersions(versionRange)
+const normalizeNodeVersion = async function(versionRange, opts) {
+  const versions = await getVersions(versionRange, opts)
 
   const version = maxSatisfying(versions, versionRange)
 
@@ -17,14 +17,14 @@ const normalizeNodeVersion = async function(versionRange) {
 }
 
 // Retrieve all available Node versions
-const getVersions = async function(versionRange) {
+const getVersions = async function(versionRange, opts) {
   const { cachedVersions, cacheFile } = await getCachedVersions(versionRange)
 
   if (cachedVersions !== undefined) {
     return cachedVersions
   }
 
-  const versions = await allNodeVersions()
+  const versions = await allNodeVersions(opts)
 
   await cacheVersions(versions, cacheFile)
 
