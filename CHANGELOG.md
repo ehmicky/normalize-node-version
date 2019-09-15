@@ -1,3 +1,9 @@
+# 2.2.1
+
+## Dependencies
+
+- Upgrade `all-node-versions`
+
 # 2.2.0
 
 ## Features
