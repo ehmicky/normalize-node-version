@@ -1,3 +1,11 @@
+# 3.0.0
+
+## Features
+
+- Add the
+  [`progress` option](https://github.com/ehmicky/normalize-node-version/blob/master/README.md#progress).
+  That option displays a loading spinner.
+
 # 2.2.3
 
 ## Internal

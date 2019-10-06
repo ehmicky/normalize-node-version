@@ -23,8 +23,10 @@ await normalizeNodeVersion('<7') // '6.17.1'
 await normalizeNodeVersion('*') // Latest Node version, e.g. '12.8.0'
 await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
 
+// All available options
 await normalizeNodeVersion('8', {
   mirror: 'https://npm.taobao.org/mirrors/node',
+  progress: true,
 })
 ```
 
@@ -51,6 +53,12 @@ Base URL. Can be customized (for example `https://npm.taobao.org/mirrors/node`).
 
 The following environment variables can also be used: `NODE_MIRROR`,
 `NVM_NODEJS_ORG_MIRROR`, `N_NODE_MIRROR` or `NODIST_NODE_MIRROR`.
+
+#### progress
+
+_Type_: `boolean`<br>_Default_: `false`
+
+Whether to show a progress spinner.
 
 # See also
 
