@@ -1,3 +1,9 @@
+# 4.1.0
+
+## Features
+
+- Improve speed.
+
 # 4.0.0
 
 ## Breaking changes

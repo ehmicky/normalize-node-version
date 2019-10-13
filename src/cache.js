@@ -1,13 +1,14 @@
-import { readFile } from 'fs'
+import { readFile, stat, utimes } from 'fs'
 import { promisify } from 'util'
 import { env } from 'process'
 
-import pathExists from 'path-exists'
 import { clean, maxSatisfying, major } from 'semver'
 import writeFileAtomic from 'write-file-atomic'
 import globalCacheDir from 'global-cache-dir'
 
 const pReadFile = promisify(readFile)
+const pStat = promisify(stat)
+const pUtimes = promisify(utimes)
 
 // We cache the HTTP request. The cache needs to be invalidated sometimes since
 // new Node versions are made available every week. We only invalidate it when
@@ -38,32 +39,47 @@ const CACHE_DIR = 'normalize-node-version'
 const CACHE_FILENAME = 'versions.json'
 
 const getCachedContent = async function(cacheFile, versionRange) {
-  if (!(await pathExists(cacheFile))) {
+  const cacheStat = await getCacheStat(cacheFile)
+
+  if (cacheStat === undefined) {
     return
   }
 
   const versionsStr = await pReadFile(cacheFile, 'utf8')
   const versions = JSON.parse(versionsStr)
 
-  if (!isCachedVersion(versionRange, versions)) {
+  if (!isCachedVersion(versionRange, versions, cacheStat)) {
     return
   }
+
+  await updateCacheAtime(cacheFile, cacheStat)
 
   // eslint-disable-next-line fp/no-mutation
   currentCachedVersions = versions
   return versions
 }
 
+const getCacheStat = async function(cacheFile) {
+  try {
+    return await pStat(cacheFile)
+  } catch {}
+}
+
 // We invalidate cache if:
 //  - the version is missing
 //  - the version is a range matching the last version of a major release.
 //    E.g. `12` matches the last `12.*.*` but new versions might have been
-//    released.
-const isCachedVersion = function(versionRange, versions) {
+//    released. This is cached for one hour, which is refreshed on each access.
+const isCachedVersion = function(versionRange, versions, cacheStat) {
   const version = maxSatisfying(versions, versionRange)
   const isMissing = version === null
   return (
-    !isMissing && !(isRange(versionRange) && isLastVersion(version, versions))
+    !isMissing &&
+    !(
+      isRange(versionRange) &&
+      isLastVersion(version, versions) &&
+      isOldCache(cacheStat)
+    )
   )
 }
 
@@ -76,6 +92,23 @@ const isLastVersion = function(version, versions) {
   const maxVersion = versions.find(versionA => major(versionA) === majorVersion)
   return version === maxVersion
 }
+
+const isOldCache = function({ atimeMs }) {
+  const ageMs = Date.now() - atimeMs
+  return ageMs > MAX_AGE_MS
+}
+
+// One hour
+const MAX_AGE_MS = 36e5
+
+// Refresh cache file atime so it bounces the cache duration
+const updateCacheAtime = async function(cacheFile, { mtimeMs }) {
+  const atime = Date.now() / MILLISECS_TO_SECS
+  const mtime = mtimeMs / MILLISECS_TO_SECS
+  await pUtimes(cacheFile, atime, mtime)
+}
+
+const MILLISECS_TO_SECS = 1e3
 
 // Persist the cached versions
 export const cacheVersions = async function(versions, cacheFile) {
