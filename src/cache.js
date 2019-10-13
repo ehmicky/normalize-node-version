@@ -58,7 +58,7 @@ const getCachedContent = async function(cacheFile, versionRange) {
 //  - the version is missing
 //  - the version is a range matching the last version of a major release.
 //    E.g. `12` matches the last `12.*.*` but new versions might have been
-//    releases.
+//    released.
 const isCachedVersion = function(versionRange, versions) {
   const version = maxSatisfying(versions, versionRange)
   const isMissing = version === null
