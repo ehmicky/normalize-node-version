@@ -50,7 +50,7 @@
     "test": "test"
   },
   "dependencies": {
-    "all-node-versions": "^4.0.0",
+    "all-node-versions": "^4.0.1",
     "core-js": "^3.3.3",
     "global-cache-dir": "^1.0.1",
     "semver": "^6.3.0",
