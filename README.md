@@ -61,6 +61,7 @@ The following environment variables can also be used: `NODE_MIRROR`,
   available Node.js versions
 - [`fetch-node-website`](https://github.com/ehmicky/fetch-node-website): Fetch
   releases on nodejs.org
+- [`execa`](https://github.com/sindresorhus/execa): Process execution for humans
 
 # Support
 
