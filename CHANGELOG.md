@@ -1,3 +1,9 @@
+# 6.1.1
+
+## Dependencies
+
+- Upgrade `all-node-versions` to `4.1.1`
+
 # 6.1.0
 
 ## Features
