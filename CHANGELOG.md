@@ -1,3 +1,9 @@
+# 6.1.0
+
+## Features
+
+- Use cache when offline (no network connection)
+
 # 6.0.0
 
 ## Breaking changes
