@@ -24,7 +24,7 @@ each(
     // `cache: false` option
     { versions: ['4.0.0', '1.2.3'], input: '4', output: '4.9.1', cache: false },
     // `cache` option default value
-    { versions: ['4.0.0', '1.2.3'], input: '4', output: '4.9.1' },
+    { versions: ['4.0.0', '1.2.3'], input: '4', output: '4.0.0' },
     // Non-last version -> cache
     {
       versions: ['4.0.0', '1.2.3', '1.1.3'],

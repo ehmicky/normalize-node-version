@@ -1,3 +1,11 @@
+# 6.0.0
+
+## Breaking changes
+
+- Set the
+  [`cache` option](https://github.com/ehmicky/normalize-node-version/blob/master/README.md#cache)
+  default value to `true`.
+
 # 5.1.1
 
 ## Dependencies

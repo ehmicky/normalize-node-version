@@ -19,7 +19,7 @@ const normalizeNodeVersion = async function(versionRange, opts) {
 // Retrieve all available Node versions
 const getVersions = async function(
   versionRange,
-  { cache = false, ...opts } = {},
+  { cache = true, ...opts } = {},
 ) {
   if (!cache) {
     return allNodeVersions(opts)
