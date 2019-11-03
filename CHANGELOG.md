@@ -1,3 +1,12 @@
+# 5.0.0
+
+## Breaking changes
+
+- Add the
+  [`cache` option](https://github.com/ehmicky/normalize-node-version/blob/master/README.md#cache)
+  to cache the HTTP request made to retrieve the list of available Node.js
+  versions. This defaults to `false`.
+
 # 4.1.4
 
 ## Bug fixes
