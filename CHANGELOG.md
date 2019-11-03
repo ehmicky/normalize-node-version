@@ -1,3 +1,9 @@
+# 5.1.1
+
+## Dependencies
+
+- Reduce the number of dependencies
+
 # 5.1.0
 
 ## Dependencies
