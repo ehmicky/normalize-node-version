@@ -1,3 +1,9 @@
+# 5.1.0
+
+## Dependencies
+
+- Upgrade `all-node-versions` to `4.1.0`
+
 # 5.0.0
 
 ## Breaking changes
