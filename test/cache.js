@@ -1,16 +1,14 @@
-import { env } from 'process'
-import { writeFile, unlink, utimes } from 'fs'
-import { promisify } from 'util'
-
 import test from 'ava'
 import { each } from 'test-each'
-import globalCacheDir from 'global-cache-dir'
 
 import normalizeNodeVersion from '../src/main.js'
 
-const pWriteFile = promisify(writeFile)
-const pUnlink = promisify(unlink)
-const pUtimes = promisify(utimes)
+import {
+  setTestCache,
+  unsetTestCache,
+  writeCacheFile,
+  removeCacheFile,
+} from './helpers/cache.js'
 
 // This uses a global environment variable to manipulate the cache file.
 // Since this is global we:
@@ -54,36 +52,19 @@ each(
   ],
   ({ title }, { versions, input, output, old, cache }) => {
     test.serial(`Caching | ${title}`, async t => {
-      // eslint-disable-next-line fp/no-mutation
-      env.TEST_CACHE_FILENAME = String(Math.random()).replace('.', '')
+      setTestCache()
 
-      const cacheFile = await writeCacheFile(versions, old)
+      try {
+        const cacheFile = await writeCacheFile(versions, old)
 
-      const version = await normalizeNodeVersion(input, { cache })
+        const version = await normalizeNodeVersion(input, { cache })
 
-      t.is(version, output)
+        t.is(version, output)
 
-      if (cache) {
-        await pUnlink(cacheFile)
+        await removeCacheFile(cacheFile, cache)
+      } finally {
+        unsetTestCache()
       }
-
-      // eslint-disable-next-line fp/no-delete
-      delete env.TEST_CACHE_FILENAME
     })
   },
 )
-
-const writeCacheFile = async function(versions, old) {
-  const cacheDir = await globalCacheDir('normalize-node-version')
-  const cacheFile = `${cacheDir}/${env.TEST_CACHE_FILENAME}`
-
-  if (versions !== undefined) {
-    await pWriteFile(cacheFile, JSON.stringify(versions))
-  }
-
-  if (old) {
-    await pUtimes(cacheFile, 0, 0)
-  }
-
-  return cacheFile
-}

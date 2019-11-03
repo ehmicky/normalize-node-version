@@ -9,6 +9,12 @@ each([undefined, 'not_a_version_range', '50'], ({ title }, versionRange) => {
   })
 })
 
+test('Invalid mirror', async t => {
+  await t.throwsAsync(
+    normalizeNodeVersion('4', { mirror: 'not_valid_url', cache: false }),
+  )
+})
+
 test('Success', async t => {
   const version = await normalizeNodeVersion('4')
 

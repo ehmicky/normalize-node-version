@@ -23,7 +23,12 @@ export const getCachedVersions = async function(versionRange) {
   }
 
   const cacheFile = await getCacheFile()
-  const cachedVersions = await getCachedContent(cacheFile, versionRange)
+  const cacheStat = await getCacheStat(cacheFile)
+  const cachedVersions = await getCachedContent(
+    cacheFile,
+    cacheStat,
+    versionRange,
+  )
   return { cachedVersions, cacheFile }
 }
 
@@ -39,15 +44,22 @@ const getCacheFile = async function() {
 const CACHE_DIR = 'normalize-node-version'
 const CACHE_FILENAME = 'versions.json'
 
-const getCachedContent = async function(cacheFile, versionRange) {
-  const cacheStat = await getCacheStat(cacheFile)
+const getCacheStat = async function(cacheFile) {
+  try {
+    return await pStat(cacheFile)
+  } catch {}
+}
 
+const getCachedContent = async function(cacheFile, cacheStat, versionRange) {
   if (cacheStat === undefined) {
     return
   }
 
-  const versionsStr = await pReadFile(cacheFile, 'utf8')
-  const versions = JSON.parse(versionsStr)
+  const versions = JSON.parse(await pReadFile(cacheFile, 'utf8'))
+
+  if (versionRange === undefined) {
+    return versions
+  }
 
   if (!isCachedVersion(versionRange, versions, cacheStat)) {
     return
@@ -57,13 +69,8 @@ const getCachedContent = async function(cacheFile, versionRange) {
 
   // eslint-disable-next-line fp/no-mutation
   currentCachedVersions = versions
-  return versions
-}
 
-const getCacheStat = async function(cacheFile) {
-  try {
-    return await pStat(cacheFile)
-  } catch {}
+  return versions
 }
 
 // We invalidate cache if:
