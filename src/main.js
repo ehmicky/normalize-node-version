@@ -17,7 +17,14 @@ const normalizeNodeVersion = async function(versionRange, opts) {
 }
 
 // Retrieve all available Node versions
-const getVersions = async function(versionRange, opts) {
+const getVersions = async function(
+  versionRange,
+  { cache = false, ...opts } = {},
+) {
+  if (!cache) {
+    return allNodeVersions(opts)
+  }
+
   const { cachedVersions, cacheFile } = await getCachedVersions(versionRange)
 
   if (cachedVersions !== undefined) {

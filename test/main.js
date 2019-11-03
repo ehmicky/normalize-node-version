@@ -16,8 +16,8 @@ test('Success', async t => {
 })
 
 test('Twice in same process', async t => {
-  await normalizeNodeVersion('4')
-  const version = await normalizeNodeVersion('4')
+  await normalizeNodeVersion('4', { cache: true })
+  const version = await normalizeNodeVersion('4', { cache: true })
 
   t.is(version, '4.9.1')
 })

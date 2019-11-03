@@ -20,30 +20,52 @@ const pUtimes = promisify(utimes)
 each(
   [
     // No cache
-    { cache: undefined, input: '4', output: '4.9.1' },
+    { versions: undefined, input: '4', output: '4.9.1', cache: true },
+    // `cache: false` option
+    { versions: ['4.0.0', '1.2.3'], input: '4', output: '4.9.1', cache: false },
+    // `cache` option default value
+    { versions: ['4.0.0', '1.2.3'], input: '4', output: '4.9.1' },
     // Non-last version -> cache
-    { cache: ['4.0.0', '1.2.3', '1.1.3'], input: '1.1', output: '1.1.3' },
+    {
+      versions: ['4.0.0', '1.2.3', '1.1.3'],
+      input: '1.1',
+      output: '1.1.3',
+      cache: true,
+    },
     // Last version but no range -> cache
-    { cache: ['4.0.0', '1.2.3'], input: '4.0.0', output: '4.0.0' },
+    {
+      versions: ['4.0.0', '1.2.3'],
+      input: '4.0.0',
+      output: '4.0.0',
+      cache: true,
+    },
     // Last version with range -> cache if recent cache file
-    { cache: ['4.0.0', '1.2.3'], input: '4', output: '4.0.0' },
+    { versions: ['4.0.0', '1.2.3'], input: '4', output: '4.0.0', cache: true },
     // Last version with range -> no cache if old cache file
-    { cache: ['4.0.0', '1.2.3'], input: '4', output: '4.9.1', old: true },
+    {
+      versions: ['4.0.0', '1.2.3'],
+      input: '4',
+      output: '4.9.1',
+      old: true,
+      cache: true,
+    },
     // Above last version -> no cache
-    { cache: ['3.0.0', '1.2.3'], input: '4', output: '4.9.1' },
+    { versions: ['3.0.0', '1.2.3'], input: '4', output: '4.9.1', cache: true },
   ],
-  ({ title }, { cache, input, output, old }) => {
+  ({ title }, { versions, input, output, old, cache }) => {
     test.serial(`Caching | ${title}`, async t => {
       // eslint-disable-next-line fp/no-mutation
       env.TEST_CACHE_FILENAME = String(Math.random()).replace('.', '')
 
-      const cacheFile = await writeCacheFile(cache, old)
+      const cacheFile = await writeCacheFile(versions, old)
 
-      const version = await normalizeNodeVersion(input)
+      const version = await normalizeNodeVersion(input, { cache })
 
       t.is(version, output)
 
-      await pUnlink(cacheFile)
+      if (cache) {
+        await pUnlink(cacheFile)
+      }
 
       // eslint-disable-next-line fp/no-delete
       delete env.TEST_CACHE_FILENAME
@@ -51,12 +73,12 @@ each(
   },
 )
 
-const writeCacheFile = async function(cache, old) {
+const writeCacheFile = async function(versions, old) {
   const cacheDir = await globalCacheDir('normalize-node-version')
   const cacheFile = `${cacheDir}/${env.TEST_CACHE_FILENAME}`
 
-  if (cache !== undefined) {
-    await pWriteFile(cacheFile, JSON.stringify(cache))
+  if (versions !== undefined) {
+    await pWriteFile(cacheFile, JSON.stringify(versions))
   }
 
   if (old) {

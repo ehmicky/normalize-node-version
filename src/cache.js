@@ -16,6 +16,7 @@ const pUtimes = promisify(utimes)
 // The cache is persisted to
 // `GLOBAL_CACHE_DIR/normalize-node-version/versions.json`.
 // Also we also cache it in-memory so it's performed only once per process.
+// If the `cache` option is `false` (default), we do not read/write cache.
 export const getCachedVersions = async function(versionRange) {
   if (currentCachedVersions !== undefined && !env.TEST_CACHE_FILENAME) {
     return { cachedVersions: currentCachedVersions }

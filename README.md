@@ -25,6 +25,7 @@ await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
 
 // All available options
 await normalizeNodeVersion('8', {
+  cache: true,
   mirror: 'https://npm.taobao.org/mirrors/node',
 })
 ```
@@ -43,6 +44,13 @@ npm install normalize-node-version
 `Promise<string>`
 
 ### options
+
+#### cache
+
+_Type_: `boolean`<br>_Default_: `false`
+
+Cache the HTTP request to retrieve the list of available Node.js versions. The
+cache is invalidated after one hour.
 
 #### mirror
 
