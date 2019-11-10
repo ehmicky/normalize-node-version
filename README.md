@@ -40,21 +40,24 @@ npm install normalize-node-version
 
 ## normalizeNodeVersion(versionRange, options?)
 
-`versionRange`: `string`<br> `options`: `object`<br> _Returns_:
-`Promise<string>`
+`versionRange`: `string`\
+`options`: `object`\
+_Returns_: `Promise<string>`
 
 ### options
 
 #### cache
 
-_Type_: `boolean`<br>_Default_: `true`
+_Type_: `boolean`\
+_Default_: `true`
 
 Cache the HTTP request to retrieve the list of available Node.js versions. The
 cache is invalidated after one hour.
 
 #### mirror
 
-_Type_: `string`<br>_Default_: `https://nodejs.org/dist`
+_Type_: `string`\
+_Default_: `https://nodejs.org/dist`
 
 Base URL. Can be customized (for example `https://npm.taobao.org/mirrors/node`).
 
