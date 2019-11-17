@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "all-node-versions": "^5.0.1",
-    "core-js": "^3.4.1",
+    "core-js": "^3.4.2",
     "global-cache-dir": "^1.0.1",
     "semver": "^6.3.0",
     "write-file-atomic": "^3.0.1"
