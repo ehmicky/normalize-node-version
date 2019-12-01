@@ -1,3 +1,9 @@
+# 6.1.2
+
+## Bug fixes
+
+- Fix crash when Node.js binary URL is invalid
+
 # 6.1.1
 
 ## Dependencies
