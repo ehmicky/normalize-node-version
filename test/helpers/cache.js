@@ -1,12 +1,7 @@
 import { env } from 'process'
-import { writeFile, unlink, utimes } from 'fs'
-import { promisify } from 'util'
+import { promises } from 'fs'
 
 import globalCacheDir from 'global-cache-dir'
-
-const pWriteFile = promisify(writeFile)
-const pUnlink = promisify(unlink)
-const pUtimes = promisify(utimes)
 
 // We set an environment variable with mocked cached versions to be able to
 // test caching.
@@ -25,11 +20,11 @@ export const writeCacheFile = async function(versions, old) {
   const cacheFile = `${cacheDir}/${env.TEST_CACHE_FILENAME}`
 
   if (versions !== undefined) {
-    await pWriteFile(cacheFile, JSON.stringify(versions))
+    await promises.writeFile(cacheFile, JSON.stringify(versions))
   }
 
   if (old) {
-    await pUtimes(cacheFile, 0, 0)
+    await promises.utimes(cacheFile, 0, 0)
   }
 
   return cacheFile
@@ -40,5 +35,5 @@ export const removeCacheFile = async function(cacheFile, cache) {
     return
   }
 
-  await pUnlink(cacheFile)
+  await promises.unlink(cacheFile)
 }

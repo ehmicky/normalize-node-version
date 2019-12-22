@@ -1,14 +1,9 @@
-import { readFile, stat, utimes } from 'fs'
-import { promisify } from 'util'
+import { promises } from 'fs'
 import { env } from 'process'
 
 import { clean, maxSatisfying, major } from 'semver'
 import writeFileAtomic from 'write-file-atomic'
 import globalCacheDir from 'global-cache-dir'
-
-const pReadFile = promisify(readFile)
-const pStat = promisify(stat)
-const pUtimes = promisify(utimes)
 
 // We cache the HTTP request. The cache needs to be invalidated sometimes since
 // new Node versions are made available every week. We only invalidate it when
@@ -46,7 +41,7 @@ const CACHE_FILENAME = 'versions.json'
 
 const getCacheStat = async function(cacheFile) {
   try {
-    return await pStat(cacheFile)
+    return await promises.stat(cacheFile)
   } catch {}
 }
 
@@ -55,7 +50,7 @@ const getCachedContent = async function(cacheFile, cacheStat, versionRange) {
     return
   }
 
-  const versions = JSON.parse(await pReadFile(cacheFile, 'utf8'))
+  const versions = JSON.parse(await promises.readFile(cacheFile, 'utf8'))
 
   if (versionRange === undefined) {
     return versions
@@ -113,7 +108,7 @@ const MAX_AGE_MS = 36e5
 const updateCacheAtime = async function(cacheFile, { mtimeMs }) {
   const atime = Date.now() / MILLISECS_TO_SECS
   const mtime = mtimeMs / MILLISECS_TO_SECS
-  await pUtimes(cacheFile, atime, mtime)
+  await promises.utimes(cacheFile, atime, mtime)
 }
 
 const MILLISECS_TO_SECS = 1e3
