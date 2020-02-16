@@ -57,7 +57,7 @@
     "write-file-atomic": "^3.0.1"
   },
   "devDependencies": {
-    "@ehmicky/dev-tasks": "^0.31.6",
+    "@ehmicky/dev-tasks": "^0.31.7",
     "ava": "^3.0.0",
     "gulp": "^4.0.2",
     "husky": "^4.2.1",
