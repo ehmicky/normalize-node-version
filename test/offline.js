@@ -17,7 +17,7 @@ each(
     { versions: ['4.0.0'], input: '4', cache: false },
   ],
   ({ title }, { versions, input, cache }) => {
-    test.serial(`Offline | ${title}`, async t => {
+    test.serial(`Offline | ${title}`, async (t) => {
       setTestCache()
 
       try {
@@ -39,7 +39,7 @@ each(
   },
 )
 
-test.serial(`Offline | no cache`, async t => {
+test.serial(`Offline | no cache`, async (t) => {
   setTestCache()
 
   try {

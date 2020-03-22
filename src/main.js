@@ -5,7 +5,7 @@ import { getCachedVersions, cacheVersions } from './cache.js'
 import { handleOfflineError } from './offline.js'
 
 // Retrieve the Node version matching a specific `versionRange`
-const normalizeNodeVersion = async function(versionRange, opts) {
+const normalizeNodeVersion = async function (versionRange, opts) {
   const versions = await getVersions(versionRange, opts)
 
   const version = maxSatisfying(versions, versionRange)
@@ -18,7 +18,7 @@ const normalizeNodeVersion = async function(versionRange, opts) {
 }
 
 // Retrieve all available Node versions
-const getVersions = async function(
+const getVersions = async function (
   versionRange,
   { cache = true, ...opts } = {},
 ) {
@@ -39,7 +39,7 @@ const getVersions = async function(
   return versions
 }
 
-const getAllVersions = async function(opts) {
+const getAllVersions = async function (opts) {
   try {
     return await allNodeVersions(opts)
   } catch (error) {

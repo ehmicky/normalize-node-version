@@ -51,7 +51,7 @@ each(
     { versions: ['3.0.0', '1.2.3'], input: '4', output: '4.9.1', cache: true },
   ],
   ({ title }, { versions, input, output, old, cache }) => {
-    test.serial(`Caching | ${title}`, async t => {
+    test.serial(`Caching | ${title}`, async (t) => {
       setTestCache()
 
       try {
