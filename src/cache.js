@@ -1,9 +1,9 @@
 import { promises } from 'fs'
 import { env } from 'process'
 
+import globalCacheDir from 'global-cache-dir'
 import { clean, maxSatisfying, major } from 'semver'
 import writeFileAtomic from 'write-file-atomic'
-import globalCacheDir from 'global-cache-dir'
 
 // We cache the HTTP request. The cache needs to be invalidated sometimes since
 // new Node versions are made available every week. We only invalidate it when

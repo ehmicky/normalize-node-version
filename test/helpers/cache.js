@@ -1,5 +1,5 @@
-import { env } from 'process'
 import { promises } from 'fs'
+import { env } from 'process'
 
 import globalCacheDir from 'global-cache-dir'
 
