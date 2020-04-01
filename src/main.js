@@ -1,14 +1,19 @@
 import allNodeVersions from 'all-node-versions'
 import { maxSatisfying } from 'semver'
 
+import { resolveVersionRangeAlias } from './aliases.js'
 import { getCachedVersions, cacheVersions } from './cache.js'
 import { handleOfflineError } from './offline.js'
 
 // Retrieve the Node version matching a specific `versionRange`
 const normalizeNodeVersion = async function (versionRange, opts) {
-  const versions = await getVersions(versionRange, opts)
+  const resolvedVersionRange = await resolveVersionRangeAlias(
+    versionRange,
+    opts,
+  )
+  const versions = await getVersions(resolvedVersionRange, opts)
 
-  const version = maxSatisfying(versions, versionRange)
+  const version = maxSatisfying(versions, resolvedVersionRange)
 
   if (version === null) {
     throw new Error(`Invalid Node version: ${versionRange}`)

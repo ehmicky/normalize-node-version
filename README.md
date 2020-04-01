@@ -21,6 +21,8 @@ await normalizeNodeVersion('v8.5.0') // '8.5.0'
 await normalizeNodeVersion('8.5.2') // Error: Invalid Node version
 await normalizeNodeVersion('<7') // '6.17.1'
 await normalizeNodeVersion('*') // Latest Node version, e.g. '12.8.0'
+await normalizeNodeVersion('_') // Node version used by current process
+await normalizeNodeVersion('.') // Node version of project specified in either .node-version, .nvmrc or .naverc
 await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
 
 // All available options
@@ -63,6 +65,14 @@ Base URL. Can be customized (for example `https://npm.taobao.org/mirrors/node`).
 
 The following environment variables can also be used: `NODE_MIRROR`,
 `NVM_NODEJS_ORG_MIRROR`, `N_NODE_MIRROR` or `NODIST_NODE_MIRROR`.
+
+#### cache
+
+_Type_: `string`\
+_Default_: `process.cwd()`
+
+Folder to consider to start look for a node version file when using the `.`
+alias (`.node-version`, `.nvmrc` or `.naverc`)
 
 # See also
 
