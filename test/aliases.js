@@ -1,4 +1,3 @@
-import { join } from 'path'
 import { version } from 'process'
 
 import test from 'ava'
@@ -7,7 +6,7 @@ import { resolveVersionRangeAlias } from '../src/aliases.js'
 
 const resolveInFolder = (versionRange, folder) =>
   resolveVersionRangeAlias(versionRange, {
-    cwd: join(__dirname, 'fixtures', folder),
+    cwd: `${__dirname}/fixtures/${folder}`,
   })
 
 test('Resolve - with node-version pseudo version', async (t) => {
@@ -30,10 +29,11 @@ test('Resolve - in mixed project pseudo version, .node-version having precedence
   t.is(versionRange, 'v12.12', 'not resolved to .node-version')
 })
 
-test('Throw error if resolving - and none of the node version files are found', async (t) => {
-  await t.throwsAsync(
-    resolveVersionRangeAlias('.', { cwd: join(__dirname, '..', 'src') }),
-  )
+test('Resolve -  default to process.version if no version file found', async (t) => {
+  const versionRange = await resolveVersionRangeAlias('.', {
+    cwd: `${__dirname}/../src`,
+  })
+  t.is(versionRange, version, 'not resolved to .node-version')
 })
 
 test('Resolve current node pseudo version', async (t) => {

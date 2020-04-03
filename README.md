@@ -7,6 +7,9 @@
 
 Normalize and validate Node.js versions
 
+Can guess the current project's version using its `.nvmrc` if you use supported
+[aliases](#supported-aliases)
+
 # Example
 
 <!-- Remove 'eslint-skip' once estree supports top-level await -->
@@ -22,7 +25,7 @@ await normalizeNodeVersion('8.5.2') // Error: Invalid Node version
 await normalizeNodeVersion('<7') // '6.17.1'
 await normalizeNodeVersion('*') // Latest Node version, e.g. '12.8.0'
 await normalizeNodeVersion('_') // Node version used by current process
-await normalizeNodeVersion('.') // Node version of project specified in either .node-version, .nvmrc or .naverc
+await normalizeNodeVersion('.') // Node version from a '.nvmrc', '.node-version' or '.naverc' file in the current directory or any parent directory
 await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
 
 // All available options
@@ -73,6 +76,16 @@ _Default_: `process.cwd()`
 
 Folder to consider to start look for a node version file when using the `.`
 alias (`.node-version`, `.nvmrc` or `.naverc`)
+
+### Supported aliases
+
+`normalizeNodeVersion` support some node version aliases you can use as
+`versionRange`:
+
+- `_` : Node version used by current process
+- `.` : Node version from a `.nvmrc`, `.node-version` or `.naverc` file in the
+  current directory or any parent directory If no version file is found, it will
+  resolve to current process version.
 
 # See also
 
