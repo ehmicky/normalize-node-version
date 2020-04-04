@@ -5,10 +5,10 @@
 [![Twitter](https://img.shields.io/badge/%E2%80%8B-twitter-4cc61e.svg?logo=twitter)](https://twitter.com/intent/follow?screen_name=ehmicky)
 [![Medium](https://img.shields.io/badge/%E2%80%8B-medium-4cc61e.svg?logo=medium)](https://medium.com/@ehmicky)
 
-Normalize and validate Node.js versions
+Normalize and validate Node.js versions.
 
 Can guess the current project's version using its `.nvmrc` if you use supported
-[aliases](#supported-aliases)
+[aliases](#supported-aliases).
 
 # Example
 
@@ -69,23 +69,23 @@ Base URL. Can be customized (for example `https://npm.taobao.org/mirrors/node`).
 The following environment variables can also be used: `NODE_MIRROR`,
 `NVM_NODEJS_ORG_MIRROR`, `N_NODE_MIRROR` or `NODIST_NODE_MIRROR`.
 
-#### cache
+#### cwd
 
 _Type_: `string`\
 _Default_: `process.cwd()`
 
-Folder to consider to start look for a node version file when using the `.`
-alias (`.node-version`, `.nvmrc` or `.naverc`)
+Start from this directory when looking for a Node.js version file when using the
+`.` alias (`.node-version`, `.nvmrc` or `.naverc`).
 
 ### Supported aliases
 
-`normalizeNodeVersion` support some node version aliases you can use as
+`normalizeNodeVersion` supports some Node version aliases you can use as
 `versionRange`:
 
-- `_` : Node version used by current process
+- `_` : Node version used by the current process
 - `.` : Node version from a `.nvmrc`, `.node-version` or `.naverc` file in the
-  current directory or any parent directory If no version file is found, it will
-  resolve to current process version.
+  current directory or any parent directory. If no version file is found, it
+  will default to the current process version.
 
 # See also
 

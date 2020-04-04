@@ -1,6 +1,3 @@
-import { join } from 'path'
-import { versions } from 'process'
-
 import test from 'ava'
 import { each } from 'test-each'
 
@@ -22,20 +19,6 @@ test('Success', async (t) => {
   const version = await normalizeNodeVersion('4')
 
   t.is(version, '4.9.1')
-})
-
-test('Success with node version file', async (t) => {
-  const version = await normalizeNodeVersion('.', {
-    cwd: join(__dirname, 'fixtures', 'main-project'),
-  })
-
-  t.is(version, '4.9.1')
-})
-
-test('Success with current node', async (t) => {
-  const version = await normalizeNodeVersion('_')
-
-  t.is(version, versions.node)
 })
 
 test('Twice in same process', async (t) => {

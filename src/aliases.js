@@ -3,12 +3,12 @@ import { version as processVersion } from 'process'
 
 import findUp from 'find-up'
 
-export const NODE_VERSION_ALIAS = '.'
-export const NODE_VERSION_FILES = ['.node-version', '.nvmrc', '.naverc']
+const NODE_VERSION_ALIAS = '.'
+const NODE_VERSION_FILES = ['.node-version', '.nvmrc', '.naverc']
 
-export const CURRENT_NODE_ALIAS = '_'
+const CURRENT_NODE_ALIAS = '_'
 
-export const resolveNodeVersionAlias = async ({ cwd } = {}) => {
+const resolveNodeVersionAlias = async ({ cwd }) => {
   const nodeVersionFile = await findUp(NODE_VERSION_FILES, { cwd })
   if (nodeVersionFile === undefined) return
 
