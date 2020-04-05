@@ -1,55 +1,52 @@
 import { versions, cwd as getCwd, chdir } from 'process'
 
 import test from 'ava'
+import { each } from 'test-each'
 
 import normalizeNodeVersion from '../src/main.js'
 
-const resolveInFolder = (versionRange, folder) =>
-  normalizeNodeVersion(versionRange, {
-    cwd: `${__dirname}/fixtures/${folder}`,
-  })
+const FIXTURES_DIR = `${__dirname}/fixtures`
+
+// We use old Node.js versions to ensure new ones are not published, making
+// those tests fail
+const VERSIONS = {
+  nave: '4.1.2',
+  nvmrc: '4.2.6',
+  nodeVersion: '4.3.2',
+  current: versions.node,
+}
+
+each(
+  [
+    { versionRange: '.', fixture: 'naverc', result: VERSIONS.nave },
+    {
+      versionRange: '.',
+      fixture: 'node-version',
+      result: VERSIONS.nodeVersion,
+    },
+    { versionRange: '.', fixture: 'nvmrc', result: VERSIONS.nvmrc },
+    { versionRange: '.', fixture: 'mixed', result: VERSIONS.nodeVersion },
+    { versionRange: '.', opts: { cwd: '/' }, result: VERSIONS.current },
+    { versionRange: '_', result: VERSIONS.current },
+  ],
+  ({ title }, { versionRange, opts, fixture, result }) => {
+    test(`Resolve aliases | ${title}`, async (t) => {
+      const cwd =
+        fixture === undefined ? undefined : `${FIXTURES_DIR}/${fixture}`
+      const output = await normalizeNodeVersion(versionRange, { cwd, ...opts })
+      t.is(output, result)
+    })
+  },
+)
 
 test.serial('Option cwd defaults to the current directory', async (t) => {
   const currentCwd = getCwd()
-  chdir(`${__dirname}/fixtures/nvmrc-project`)
+  chdir(`${FIXTURES_DIR}/nvmrc`)
 
   try {
     const versionRange = await normalizeNodeVersion('.')
-    t.is(versionRange, '12.14.1')
+    t.is(versionRange, VERSIONS.nvmrc)
   } finally {
     chdir(currentCwd)
   }
-})
-
-test('Resolve . with node-version pseudo version', async (t) => {
-  const versionRange = await resolveInFolder('.', 'node-version-project')
-  t.is(versionRange, '12.12.0')
-})
-
-test('Resolve . with nvmrc pseudo version', async (t) => {
-  const versionRange = await resolveInFolder('.', 'nvmrc-project')
-  t.is(versionRange, '12.14.1')
-})
-
-test('Resolve . with nave pseudo version', async (t) => {
-  const versionRange = await resolveInFolder('.', 'nave-project')
-  t.is(versionRange, '12.16.1')
-})
-
-test('Resolve . in mixed project pseudo version, .node-version having precedence over .nvmrc', async (t) => {
-  const versionRange = await resolveInFolder('.', 'mixed-project')
-  t.is(versionRange, '12.12.0')
-})
-
-test('Resolve . default to process.version if no version file found', async (t) => {
-  const versionRange = await normalizeNodeVersion('.', {
-    cwd: `${__dirname}/../src`,
-  })
-  t.is(versionRange, versions.node)
-})
-
-test('Resolve - current node pseudo version', async (t) => {
-  const versionRange = await normalizeNodeVersion('_')
-
-  t.is(versionRange, versions.node)
 })

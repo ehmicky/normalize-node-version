@@ -3,35 +3,38 @@ import { version as processVersion } from 'process'
 
 import findUp from 'find-up'
 
-const NODE_VERSION_ALIAS = '.'
-const NODE_VERSION_FILES = ['.node-version', '.nvmrc', '.naverc']
+// `versionRange` can be one of the following aliases:
+//   - `_`: current process's Node.js version
+//   - `.`: current project's Node.js version using `.nvmrc`, etc.
+export const resolveAlias = function (versionRange, opts) {
+  const getVersion = ALIASES[versionRange]
 
-const CURRENT_NODE_ALIAS = '_'
+  if (getVersion === undefined) {
+    return versionRange
+  }
 
-const resolveNodeVersionAlias = async ({ cwd }) => {
+  return getVersion(opts)
+}
+
+const getCurrentVersion = function () {
+  return processVersion
+}
+
+const getProjectVersion = async function ({ cwd }) {
   const nodeVersionFile = await findUp(NODE_VERSION_FILES, { cwd })
 
   if (nodeVersionFile === undefined) {
-    return
-  }
-
-  const nodeVersionFileContent = await fs.readFile(nodeVersionFile, 'utf-8')
-  return nodeVersionFileContent.trim()
-}
-
-export const resolveVersionRangeAlias = async function (
-  versionRange,
-  { cwd } = {},
-) {
-  if (versionRange === CURRENT_NODE_ALIAS) {
     return processVersion
   }
 
-  if (versionRange === NODE_VERSION_ALIAS) {
-    const resolvedVersion = await resolveNodeVersionAlias({ cwd })
+  const content = await fs.readFile(nodeVersionFile, 'utf8')
+  return content.trim()
+}
 
-    return resolvedVersion || processVersion
-  }
+const NODE_VERSION_FILES = ['.naverc', '.node-version', '.nvmrc']
 
-  return versionRange
+// List of available aliases
+const ALIASES = {
+  _: getCurrentVersion,
+  '.': getProjectVersion,
 }

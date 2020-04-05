@@ -7,8 +7,7 @@
 
 Normalize and validate Node.js versions.
 
-Can guess the current project's version using its `.nvmrc` if you use supported
-[aliases](#supported-aliases).
+Can load the current project's version using its [`.nvmrc`](#supported-aliases).
 
 # Example
 
@@ -49,6 +48,15 @@ npm install normalize-node-version
 `options`: `object`\
 _Returns_: `Promise<string>`
 
+### Supported aliases
+
+`versionRange` can be one of the following aliases:
+
+- `_` : Current process's Node.js version
+- `.` : Node version from a `.nvmrc`, `.node-version` or `.naverc` file in the
+  current directory or any parent directory. Defaults to the current process's
+  Node.js version
+
 ### options
 
 #### cache
@@ -74,18 +82,8 @@ The following environment variables can also be used: `NODE_MIRROR`,
 _Type_: `string`\
 _Default_: `process.cwd()`
 
-Start from this directory when looking for a Node.js version file when using the
-`.` alias (`.node-version`, `.nvmrc` or `.naverc`).
-
-### Supported aliases
-
-`normalizeNodeVersion` supports some Node version aliases you can use as
-`versionRange`:
-
-- `_` : Node version used by the current process
-- `.` : Node version from a `.nvmrc`, `.node-version` or `.naverc` file in the
-  current directory or any parent directory. If no version file is found, it
-  will default to the current process version.
+When using the [`.` alias](#supported-aliases), start looking for a Node.js
+version file from this directory.
 
 # See also
 
