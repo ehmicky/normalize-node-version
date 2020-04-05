@@ -3,18 +3,6 @@ import { each } from 'test-each'
 
 import normalizeNodeVersion from '../src/main.js'
 
-each([undefined, 'not_a_version_range', '50'], ({ title }, versionRange) => {
-  test(`Invalid input | ${title}`, async (t) => {
-    await t.throwsAsync(normalizeNodeVersion(versionRange))
-  })
-})
-
-test('Invalid mirror', async (t) => {
-  await t.throwsAsync(
-    normalizeNodeVersion('4', { mirror: 'not_valid_url', cache: false }),
-  )
-})
-
 test('Success', async (t) => {
   const version = await normalizeNodeVersion('4')
 

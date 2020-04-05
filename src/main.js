@@ -4,11 +4,13 @@ import { maxSatisfying } from 'semver'
 import { resolveAlias } from './aliases.js'
 import { getCachedVersions, cacheVersions } from './cache.js'
 import { handleOfflineError } from './offline.js'
+import { getOpts } from './options.js'
 
 // Retrieve the Node version matching a specific `versionRange`
-const normalizeNodeVersion = async function (versionRange, opts = {}) {
-  const resolvedVersionRange = await resolveAlias(versionRange, opts)
-  const versions = await getVersions(resolvedVersionRange, opts)
+const normalizeNodeVersion = async function (versionRange, opts) {
+  const { cwd, ...optsA } = getOpts(opts)
+  const resolvedVersionRange = await resolveAlias(versionRange, { cwd })
+  const versions = await getVersions(resolvedVersionRange, optsA)
 
   const version = maxSatisfying(versions, resolvedVersionRange)
 
