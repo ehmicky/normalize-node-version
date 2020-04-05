@@ -1,4 +1,4 @@
-import { promises } from 'fs'
+import { promises as fs } from 'fs'
 import { env } from 'process'
 
 import globalCacheDir from 'global-cache-dir'
@@ -41,7 +41,7 @@ const CACHE_FILENAME = 'versions.json'
 
 const getCacheStat = async function (cacheFile) {
   try {
-    return await promises.stat(cacheFile)
+    return await fs.stat(cacheFile)
   } catch {}
 }
 
@@ -50,7 +50,7 @@ const getCachedContent = async function (cacheFile, cacheStat, versionRange) {
     return
   }
 
-  const versions = JSON.parse(await promises.readFile(cacheFile, 'utf8'))
+  const versions = JSON.parse(await fs.readFile(cacheFile, 'utf8'))
 
   if (versionRange === undefined) {
     return versions
@@ -110,7 +110,7 @@ const MAX_AGE_MS = 36e5
 const updateCacheAtime = async function (cacheFile, { mtimeMs }) {
   const atime = Date.now() / MILLISECS_TO_SECS
   const mtime = mtimeMs / MILLISECS_TO_SECS
-  await promises.utimes(cacheFile, atime, mtime)
+  await fs.utimes(cacheFile, atime, mtime)
 }
 
 const MILLISECS_TO_SECS = 1e3
