@@ -2,7 +2,6 @@ import { versions, cwd as getCwd, chdir } from 'process'
 
 import test from 'ava'
 
-import { resolveVersionRangeAlias } from '../src/aliases.js'
 import normalizeNodeVersion from '../src/main.js'
 
 const resolveInFolder = (versionRange, folder) =>
@@ -53,16 +52,4 @@ test('Resolve - current node pseudo version', async (t) => {
   const versionRange = await normalizeNodeVersion('_')
 
   t.is(versionRange, versions.node)
-})
-
-test('Transfer node version that are not aliased [fully resolved]', async (t) => {
-  const versionRange = await resolveVersionRangeAlias('v12.12.0')
-
-  t.is(versionRange, 'v12.12.0')
-})
-
-test('Transfer node version that are not aliased [major version]', async (t) => {
-  const versionRange = await resolveVersionRangeAlias('12')
-
-  t.is(versionRange, '12')
 })

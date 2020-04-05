@@ -10,7 +10,10 @@ const CURRENT_NODE_ALIAS = '_'
 
 const resolveNodeVersionAlias = async ({ cwd }) => {
   const nodeVersionFile = await findUp(NODE_VERSION_FILES, { cwd })
-  if (nodeVersionFile === undefined) return
+
+  if (nodeVersionFile === undefined) {
+    return
+  }
 
   const nodeVersionFileContent = await fs.readFile(nodeVersionFile, 'utf-8')
   return nodeVersionFileContent.trim()
@@ -20,7 +23,9 @@ export const resolveVersionRangeAlias = async function (
   versionRange,
   { cwd } = {},
 ) {
-  if (versionRange === CURRENT_NODE_ALIAS) return processVersion
+  if (versionRange === CURRENT_NODE_ALIAS) {
+    return processVersion
+  }
 
   if (versionRange === NODE_VERSION_ALIAS) {
     const resolvedVersion = await resolveNodeVersionAlias({ cwd })
