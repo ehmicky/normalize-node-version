@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs'
 import { version as processVersion } from 'process'
 
+import { replaceAliases } from './alias.js'
 import { findNodeVersionFile } from './find.js'
 import { isPackageJson, loadPackageJson } from './package.js'
 
@@ -13,7 +14,8 @@ export const getProjectVersion = async function ({ cwd }) {
   }
 
   const versionRange = loadNodeVersionFile(nodeVersionFile)
-  return versionRange
+  const versionRangeA = replaceAliases(versionRange)
+  return versionRangeA
 }
 
 const loadNodeVersionFile = async function (nodeVersionFile) {
