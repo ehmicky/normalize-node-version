@@ -36,8 +36,8 @@ export const getCachedVersions = async function (versionRange) {
 let currentCachedVersions
 
 const getCacheFile = async function () {
-  const cacheFilename = env.TEST_CACHE_FILENAME || CACHE_FILENAME
   const cacheDir = await globalCacheDir(CACHE_DIR)
+  const cacheFilename = env.TEST_CACHE_FILENAME || CACHE_FILENAME
   return `${cacheDir}/${cacheFilename}`
 }
 
