@@ -4,8 +4,8 @@ import allNodeVersions from 'all-node-versions'
 import { maxSatisfying } from 'semver'
 
 import { resolveAlias } from './aliases.js'
-import { getCachedVersions, saveCachedVersions } from './cache.js'
-import { handleOfflineError } from './offline.js'
+import { handleOfflineError } from './cache/offline.js'
+import { readCachedVersions, writeCachedVersions } from './cache/read.js'
 import { getOpts } from './options.js'
 
 // Retrieve the Node version matching a specific `versionRange`
@@ -47,7 +47,7 @@ const getAllVersions = async function (cache, opts) {
 let processCachedVersions
 
 const getVersions = async function (cache, opts) {
-  const cachedVersions = await getCachedVersions(cache)
+  const cachedVersions = await readCachedVersions(cache)
 
   if (cachedVersions !== undefined) {
     return cachedVersions
@@ -55,7 +55,7 @@ const getVersions = async function (cache, opts) {
 
   try {
     const versions = await allNodeVersions(opts)
-    await saveCachedVersions(versions)
+    await writeCachedVersions(versions)
     return versions
   } catch (error) {
     return handleOfflineError(error)
