@@ -16,9 +16,9 @@ each(
     { versionRange: TOO_HIGH_VERSION },
     {
       versionRange: MAJOR_VERSION,
-      opts: { mirror: 'not_valid_url', cache: false },
+      opts: { mirror: 'not_valid_url', fetch: true },
     },
-    { opts: { cache: null } },
+    { opts: { fetch: 0 } },
     { opts: { cwd: true } },
   ],
   ({ title }, { versionRange, opts }) => {

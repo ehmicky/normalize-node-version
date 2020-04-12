@@ -51,15 +51,11 @@
   },
   "dependencies": {
     "all-node-versions": "^7.0.0",
-    "core-js": "^3.6.5",
     "filter-obj": "^2.0.1",
-    "global-cache-dir": "^2.0.0",
     "is-plain-obj": "^2.1.0",
     "jest-validate": "^25.3.0",
     "p-locate": "^4.1.0",
-    "path-exists": "^4.0.0",
-    "semver": "^7.2.2",
-    "write-file-atomic": "^3.0.3"
+    "semver": "^7.2.2"
   },
   "devDependencies": {
     "@ehmicky/dev-tasks": "^0.31.35",

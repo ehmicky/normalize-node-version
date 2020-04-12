@@ -18,9 +18,11 @@ export const findNodeVersionFile = function (cwd) {
 
 const getSearchFiles = function (cwd) {
   const searchDirs = getSearchDirs(cwd)
-  const searchFiles = searchDirs.flatMap((searchDir) =>
-    // eslint-disable-next-line max-nested-callbacks
-    NODE_VERSION_FILES.map((filename) => join(searchDir, filename)),
+  const searchFiles = [].concat(
+    ...searchDirs.map((searchDir) =>
+      // eslint-disable-next-line max-nested-callbacks
+      NODE_VERSION_FILES.map((filename) => join(searchDir, filename)),
+    ),
   )
   return searchFiles
 }

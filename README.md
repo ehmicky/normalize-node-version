@@ -29,7 +29,7 @@ await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
 
 // All available options
 await normalizeNodeVersion('8', {
-  cache: false,
+  fetch: true,
   mirror: 'https://npm.taobao.org/mirrors/node',
 })
 ```
@@ -60,14 +60,6 @@ _Returns_: `Promise<string>`
 
 ### options
 
-#### cache
-
-_Type_: `boolean`\
-_Default_: `true`
-
-Cache the HTTP request to retrieve the list of available Node.js versions. The
-cache is invalidated after one hour.
-
 #### mirror
 
 _Type_: `string`\
@@ -78,6 +70,16 @@ example `https://npm.taobao.org/mirrors/node`).
 
 The following environment variables can also be used: `NODE_MIRROR`,
 `NVM_NODEJS_ORG_MIRROR`, `N_NODE_MIRROR` or `NODIST_NODE_MIRROR`.
+
+#### fetch
+
+_Type_: `boolean`
+
+The list of available Node.js versions is cached for one hour by default. If the
+`fetch` option is:
+
+- `true`: the cache will not be used
+- `false`: the cache will be used even if it's older than one hour
 
 #### cwd
 
