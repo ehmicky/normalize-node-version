@@ -12,23 +12,42 @@ import writeFileAtomic from 'write-file-atomic'
 // Also we also cache it in-memory so it's performed only once per process.
 // If the `cache` option is `false`, we do not read/write cache.
 export const getCachedVersions = async function (versionRange) {
-  if (currentCachedVersions !== undefined && !env.TEST_CACHE_FILENAME) {
-    return { cachedVersions: currentCachedVersions }
-  }
-
   const cacheFile = await getCacheFile()
   const cacheStat = await getCacheStat(cacheFile)
+  const cachedVersions = await getFileCachedVersions({
+    versionRange,
+    cacheFile,
+    cacheStat,
+  })
+
+  await updateCacheAtime(cachedVersions, cacheFile, cacheStat)
+
+  return { cacheFile, cachedVersions }
+}
+
+const getFileCachedVersions = async function ({
+  versionRange,
+  cacheFile,
+  cacheStat,
+}) {
+  if (currentCachedVersions !== undefined && !env.TEST_CACHE_FILENAME) {
+    return currentCachedVersions
+  }
+
   const cachedVersions = await getCachedContent(
     cacheFile,
     cacheStat,
     versionRange,
   )
 
-  if (cachedVersions !== undefined) {
-    return { cachedVersions }
+  if (cachedVersions === undefined) {
+    return
   }
 
-  return { cacheFile }
+  // eslint-disable-next-line fp/no-mutation, require-atomic-updates
+  currentCachedVersions = cachedVersions
+
+  return cachedVersions
 }
 
 // eslint-disable-next-line fp/no-let, init-declarations
@@ -63,11 +82,6 @@ const getCachedContent = async function (cacheFile, cacheStat, versionRange) {
   if (!isCachedVersion(versionRange, versions, cacheStat)) {
     return
   }
-
-  await updateCacheAtime(cacheFile, cacheStat)
-
-  // eslint-disable-next-line fp/no-mutation
-  currentCachedVersions = versions
 
   return versions
 }
@@ -110,10 +124,14 @@ const isOldCache = function ({ atimeMs }) {
 // One hour
 const MAX_AGE_MS = 36e5
 
-// Refresh cache file atime so it bounces the cache duration
-const updateCacheAtime = async function (cacheFile, { mtimeMs }) {
+// When using the cache, refresh its atime so it bounces the cache duration
+const updateCacheAtime = async function (cachedVersions, cacheFile, cacheStat) {
+  if (cachedVersions === undefined || cacheStat === undefined) {
+    return
+  }
+
   const atime = Date.now() / MILLISECS_TO_SECS
-  const mtime = mtimeMs / MILLISECS_TO_SECS
+  const mtime = cacheStat.mtimeMs / MILLISECS_TO_SECS
   await fs.utimes(cacheFile, atime, mtime)
 }
 
