@@ -1,3 +1,11 @@
+# 9.0.0
+
+## Breaking changes
+
+- Rename `*` alias to [`latest` or `l`](/README.md#supported-aliases)
+- Rename `.` alias to [`current` or `c`](/README.md#supported-aliases)
+- Remove `_` alias
+
 # 8.0.1
 
 ## Dependencies

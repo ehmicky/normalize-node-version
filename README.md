@@ -22,9 +22,8 @@ await normalizeNodeVersion('8.5.0') // '8.5.0'
 await normalizeNodeVersion('v8.5.0') // '8.5.0'
 await normalizeNodeVersion('8.5.2') // Error: Invalid Node version
 await normalizeNodeVersion('<7') // '6.17.1'
-await normalizeNodeVersion('*') // Latest Node version, e.g. '12.8.0'
-await normalizeNodeVersion('.') // Node version from any '.nvmrc' or `package.json` in the current directory, parent directories or home directory
-await normalizeNodeVersion('_') // Node version used by current process
+await normalizeNodeVersion('latest') // Latest Node version, e.g. '12.8.0'
+await normalizeNodeVersion('current') // Node version from any '.nvmrc' or `package.json` in the current directory, parent directories or home directory
 await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
 
 // All available options
@@ -52,11 +51,10 @@ _Returns_: `Promise<string>`
 
 `versionRange` can be one of the following aliases:
 
-- `*`: Latest available Node version
-- `.` : Node version from a `.nvmrc`, `.node-version` or `.naverc` file in the
-  current directory or any parent directory. Defaults to the current process's
-  Node version
-- `_` : Current process's Node version
+- `latest` or `l`: Latest available Node version
+- `current` or `c`: Node version from a `.nvmrc`, `.node-version` or `.naverc`
+  file in the current directory or any parent directory. Defaults to the current
+  process's Node version
 
 ### options
 

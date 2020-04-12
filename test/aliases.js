@@ -1,4 +1,4 @@
-import { versions, cwd as getCwd, chdir } from 'process'
+import { cwd as getCwd, chdir } from 'process'
 
 import test from 'ava'
 import { each } from 'test-each'
@@ -13,20 +13,18 @@ const VERSIONS = {
   nave: '4.1.2',
   nvmrc: '4.2.6',
   nodeVersion: '4.3.2',
-  current: versions.node,
 }
 
 each(
   [
-    { versionRange: '.', fixture: 'naverc', result: VERSIONS.nave },
+    { versionRange: 'current', fixture: 'naverc', result: VERSIONS.nave },
     {
-      versionRange: '.',
+      versionRange: 'current',
       fixture: 'node-version',
       result: VERSIONS.nodeVersion,
     },
-    { versionRange: '.', fixture: 'nvmrc', result: VERSIONS.nvmrc },
-    { versionRange: '.', fixture: 'mixed', result: VERSIONS.nodeVersion },
-    { versionRange: '_', result: VERSIONS.current },
+    { versionRange: 'current', fixture: 'nvmrc', result: VERSIONS.nvmrc },
+    { versionRange: 'current', fixture: 'mixed', result: VERSIONS.nodeVersion },
   ],
   ({ title }, { versionRange, opts, fixture, result }) => {
     test(`Resolve aliases | ${title}`, async (t) => {
@@ -43,7 +41,7 @@ test.serial('Option cwd defaults to the current directory', async (t) => {
   chdir(`${FIXTURES_DIR}/nvmrc`)
 
   try {
-    const versionRange = await normalizeNodeVersion('.')
+    const versionRange = await normalizeNodeVersion('current')
     t.is(versionRange, VERSIONS.nvmrc)
   } finally {
     chdir(currentCwd)
