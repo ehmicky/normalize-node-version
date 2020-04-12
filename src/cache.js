@@ -25,6 +25,21 @@ export const getCachedVersions = async function (versionRange) {
   return { cacheFile, cachedVersions }
 }
 
+const getCacheFile = async function () {
+  const cacheDir = await globalCacheDir(CACHE_DIR)
+  const cacheFilename = env.TEST_CACHE_FILENAME || CACHE_FILENAME
+  return `${cacheDir}/${cacheFilename}`
+}
+
+const CACHE_DIR = 'nve'
+const CACHE_FILENAME = 'versions.json'
+
+const getCacheStat = async function (cacheFile) {
+  try {
+    return await fs.stat(cacheFile)
+  } catch {}
+}
+
 const getFileCachedVersions = async function ({
   versionRange,
   cacheFile,
@@ -52,21 +67,6 @@ const getFileCachedVersions = async function ({
 
 // eslint-disable-next-line fp/no-let, init-declarations
 let currentCachedVersions
-
-const getCacheFile = async function () {
-  const cacheDir = await globalCacheDir(CACHE_DIR)
-  const cacheFilename = env.TEST_CACHE_FILENAME || CACHE_FILENAME
-  return `${cacheDir}/${cacheFilename}`
-}
-
-const CACHE_DIR = 'nve'
-const CACHE_FILENAME = 'versions.json'
-
-const getCacheStat = async function (cacheFile) {
-  try {
-    return await fs.stat(cacheFile)
-  } catch {}
-}
 
 const getCachedContent = async function (cacheFile, cacheStat, versionRange) {
   if (cacheStat === undefined) {
