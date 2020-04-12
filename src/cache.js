@@ -8,8 +8,7 @@ import writeFileAtomic from 'write-file-atomic'
 // We cache the HTTP request. The cache needs to be invalidated sometimes since
 // new Node versions are made available every week. We only invalidate it when
 // the requested `versionRange` targets the latest Node version.
-// The cache is persisted to
-// `GLOBAL_CACHE_DIR/normalize-node-version/versions.json`.
+// The cache is persisted to `GLOBAL_CACHE_DIR/nve/versions.json`.
 // Also we also cache it in-memory so it's performed only once per process.
 // If the `cache` option is `false`, we do not read/write cache.
 export const getCachedVersions = async function (versionRange) {
