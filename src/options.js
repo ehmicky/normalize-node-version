@@ -17,8 +17,9 @@ const DEFAULT_OPTS = () => ({
 
 const EXAMPLE_OPTS = () => ({
   ...DEFAULT_OPTS(),
+  // Passed to `all-node-versions`
+  fetch: true,
   // Passed to `fetch-node-website`
-  fetch: false,
   mirror: 'https://nodejs.org/dist',
 })
 
