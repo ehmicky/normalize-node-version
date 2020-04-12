@@ -1,8 +1,10 @@
+import { env } from 'process'
+
 import allNodeVersions from 'all-node-versions'
 import { maxSatisfying } from 'semver'
 
 import { resolveAlias } from './aliases.js'
-import { getCachedVersions, cacheVersions } from './cache.js'
+import { getCachedVersions, saveCachedVersions } from './cache.js'
 import { handleOfflineError } from './offline.js'
 import { getOpts } from './options.js'
 
@@ -29,7 +31,27 @@ const getVersions = async function ({ cache, ...opts }) {
     return getAllVersions(opts)
   }
 
-  const { cachedVersions, cacheFile } = await getCachedVersions()
+  if (currentCachedVersions !== undefined && !env.TEST_CACHE_FILENAME) {
+    return currentCachedVersions
+  }
+
+  const versions = await getVers(opts)
+
+  if (versions === undefined) {
+    return
+  }
+
+  // eslint-disable-next-line fp/no-mutation, require-atomic-updates
+  currentCachedVersions = versions
+
+  return versions
+}
+
+// eslint-disable-next-line fp/no-let, init-declarations
+let currentCachedVersions
+
+const getVers = async function (opts) {
+  const cachedVersions = await getCachedVersions()
 
   if (cachedVersions !== undefined) {
     return cachedVersions
@@ -37,7 +59,7 @@ const getVersions = async function ({ cache, ...opts }) {
 
   const versions = await getAllVersions(opts)
 
-  await cacheVersions(versions, cacheFile)
+  await saveCachedVersions(versions)
 
   return versions
 }

@@ -7,7 +7,7 @@ export const handleOfflineError = async function (error) {
     throw error
   }
 
-  const { cachedVersions } = await getCachedVersions(true)
+  const cachedVersions = await getCachedVersions(true)
 
   if (cachedVersions === undefined) {
     throw error
