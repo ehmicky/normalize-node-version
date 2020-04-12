@@ -6,7 +6,7 @@ import {
   setCacheFileContent,
 } from './file.js'
 
-// We cache the HTTP request. It only lasts one hour (except offline)
+// We cache the HTTP request. It only lasts for one hour (except offline)
 // to make sure we include new Node versions made available every week.
 // We also cache it in-memory so it's performed only once per process.
 // If the `cache` option is:
@@ -25,17 +25,17 @@ export const readCachedVersions = async function (cache) {
     return
   }
 
-  const { lastUpdate, versions } = getCacheFileContent(cacheFile)
+  const { versions, age } = getCacheFileContent(cacheFile)
 
-  if (isOldCache(lastUpdate, cache)) {
+  if (isOldCache(age, cache)) {
     return
   }
 
   return versions
 }
 
-const isOldCache = function (lastUpdate, cache) {
-  return Date.now() - lastUpdate > MAX_AGE_MS && cache !== true
+const isOldCache = function (age, cache) {
+  return age > MAX_AGE_MS && cache !== true
 }
 
 // One hour

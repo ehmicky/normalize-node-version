@@ -14,12 +14,15 @@ export const getCacheFile = async function () {
 const CACHE_DIR = 'nve'
 const CACHE_FILENAME = 'versions.json'
 
+// Retrieve cache file's content
 export const getCacheFileContent = async function (cacheFile) {
   const cacheFileContent = await fs.readFile(cacheFile, 'utf8')
-  const cacheContent = JSON.parse(cacheFileContent)
-  return cacheContent
+  const { lastUpdate, versions } = JSON.parse(cacheFileContent)
+  const age = Date.now() - lastUpdate
+  return { versions, age }
 }
 
+// Persist cache file's content
 export const setCacheFileContent = async function (cacheFile, versions) {
   const lastUpdate = Date.now()
   const cacheContent = { lastUpdate, versions }
