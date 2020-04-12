@@ -30,4 +30,4 @@ export const writeCacheFile = async function (versions, old) {
   return cacheFile
 }
 
-const CACHE_DIR = 'normalize-node-version'
+const CACHE_DIR = 'nve'

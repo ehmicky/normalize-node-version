@@ -41,7 +41,7 @@ const getCacheFile = async function () {
   return `${cacheDir}/${cacheFilename}`
 }
 
-const CACHE_DIR = 'normalize-node-version'
+const CACHE_DIR = 'nve'
 const CACHE_FILENAME = 'versions.json'
 
 const getCacheStat = async function (cacheFile) {
