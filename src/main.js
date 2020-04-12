@@ -7,7 +7,7 @@ import { getOpts } from './options.js'
 // Retrieve the Node version matching a specific `versionRange`
 const normalizeNodeVersion = async function (versionRange, opts) {
   const { cwd, ...allNodeVersionsOpts } = getOpts(opts)
-  const [versions, versionRangeA] = await Promise.all([
+  const [{ versions }, versionRangeA] = await Promise.all([
     allNodeVersions(allNodeVersionsOpts),
     resolveAlias(versionRange, { cwd }),
   ])
