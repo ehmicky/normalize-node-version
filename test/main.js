@@ -11,13 +11,6 @@ test('Success', async (t) => {
   t.is(version, FULL_VERSION)
 })
 
-test('Twice in same process', async (t) => {
-  await normalizeNodeVersion(MAJOR_VERSION)
-  const version = await normalizeNodeVersion(MAJOR_VERSION)
-
-  t.is(version, FULL_VERSION)
-})
-
 each(RANGES, ({ title }, versionRange) => {
   test(`Versions range | ${title}`, async (t) => {
     const version = await normalizeNodeVersion(versionRange)
