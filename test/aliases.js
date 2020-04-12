@@ -26,7 +26,6 @@ each(
     },
     { versionRange: '.', fixture: 'nvmrc', result: VERSIONS.nvmrc },
     { versionRange: '.', fixture: 'mixed', result: VERSIONS.nodeVersion },
-    { versionRange: '.', opts: { cwd: '/' }, result: VERSIONS.current },
     { versionRange: '_', result: VERSIONS.current },
   ],
   ({ title }, { versionRange, opts, fixture, result }) => {
