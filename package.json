@@ -55,7 +55,7 @@
     "is-plain-obj": "^2.1.0",
     "jest-validate": "^25.3.0",
     "p-locate": "^4.1.0",
-    "semver": "^7.2.2"
+    "semver": "^7.3.2"
   },
   "devDependencies": {
     "@ehmicky/dev-tasks": "^0.31.35",
