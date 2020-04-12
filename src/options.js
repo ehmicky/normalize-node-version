@@ -12,12 +12,12 @@ export const getOpts = function (opts = {}) {
 }
 
 const DEFAULT_OPTS = () => ({
-  cache: true,
   cwd: getCwd(),
 })
 
 const EXAMPLE_OPTS = () => ({
   ...DEFAULT_OPTS(),
+  cache: false,
   // Passed to `fetch-node-website`
   mirror: 'https://nodejs.org/dist',
 })

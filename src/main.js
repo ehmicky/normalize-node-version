@@ -10,10 +10,10 @@ import { getOpts } from './options.js'
 
 // Retrieve the Node version matching a specific `versionRange`
 const normalizeNodeVersion = async function (versionRange, opts) {
-  const { cwd, ...optsA } = getOpts(opts)
+  const { cwd, cache, ...optsA } = getOpts(opts)
   const [versionRangeA, versions] = await Promise.all([
     resolveAlias(versionRange, { cwd }),
-    getVersions(optsA),
+    getAllVersions(cache, optsA),
   ])
 
   const version = maxSatisfying(versions, versionRangeA)
@@ -26,47 +26,37 @@ const normalizeNodeVersion = async function (versionRange, opts) {
 }
 
 // Retrieve all available Node versions
-const getVersions = async function ({ cache, ...opts }) {
-  if (!cache) {
-    return getAllVersions(opts)
+const getAllVersions = async function (cache, opts) {
+  if (
+    processCachedVersions !== undefined &&
+    cache !== false &&
+    !env.TEST_CACHE_FILENAME
+  ) {
+    return processCachedVersions
   }
 
-  if (currentCachedVersions !== undefined && !env.TEST_CACHE_FILENAME) {
-    return currentCachedVersions
-  }
-
-  const versions = await getVers(opts)
-
-  if (versions === undefined) {
-    return
-  }
+  const versions = await getVersions(cache, opts)
 
   // eslint-disable-next-line fp/no-mutation, require-atomic-updates
-  currentCachedVersions = versions
+  processCachedVersions = versions
 
   return versions
 }
 
 // eslint-disable-next-line fp/no-let, init-declarations
-let currentCachedVersions
+let processCachedVersions
 
-const getVers = async function (opts) {
-  const cachedVersions = await getCachedVersions()
+const getVersions = async function (cache, opts) {
+  const cachedVersions = await getCachedVersions(cache)
 
   if (cachedVersions !== undefined) {
     return cachedVersions
   }
 
-  const versions = await getAllVersions(opts)
-
-  await saveCachedVersions(versions)
-
-  return versions
-}
-
-const getAllVersions = async function (opts) {
   try {
-    return await allNodeVersions(opts)
+    const versions = await allNodeVersions(opts)
+    await saveCachedVersions(versions)
+    return versions
   } catch (error) {
     return handleOfflineError(error)
   }

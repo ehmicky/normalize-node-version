@@ -7,27 +7,34 @@ import writeFileAtomic from 'write-file-atomic'
 
 // We cache the HTTP request. It only lasts one hour (except offline)
 // to make sure we include new Node versions made available every week.
-// Also we also cache it in-memory so it's performed only once per process.
-// If the `cache` option is `false`, we do not read/write cache.
-export const getCachedVersions = async function (offline = false) {
+// We also cache it in-memory so it's performed only once per process.
+// If the `cache` option is:
+//   - `undefined`: we use the cache
+//   - `true`: we use the cache even if it is old
+//   - `false`: we do not use the cache
+// In all three cases, we update the cache on any successful HTTP request.
+export const getCachedVersions = async function (cache) {
+  if (cache === false) {
+    return
+  }
+
   const cacheFile = await getCacheFile()
 
   if (!(await pathExists(cacheFile))) {
     return
   }
 
-  const cacheContent = await fs.readFile(cacheFile, 'utf8')
-  const { lastUpdate, versions } = JSON.parse(cacheContent)
+  const { lastUpdate, versions } = getCacheFileContent(cacheFile)
 
-  if (isOldCache(lastUpdate, offline)) {
+  if (isOldCache(lastUpdate, cache)) {
     return
   }
 
   return versions
 }
 
-const isOldCache = function (lastUpdate, offline) {
-  return Date.now() - lastUpdate > MAX_AGE_MS && !offline
+const isOldCache = function (lastUpdate, cache) {
+  return Date.now() - lastUpdate > MAX_AGE_MS && cache !== true
 }
 
 // One hour
@@ -36,22 +43,27 @@ const MAX_AGE_MS = 36e5
 // Persist the cached versions
 export const saveCachedVersions = async function (versions) {
   const cacheFile = await getCacheFile()
+  await setCacheFileContent(cacheFile, versions)
+}
 
-  const cacheFileContent = getCacheFileContent(versions)
-  const versionsStr = `${JSON.stringify(cacheFileContent, null, 2)}\n`
+const getCacheFileContent = async function (cacheFile) {
+  const cacheFileContent = await fs.readFile(cacheFile, 'utf8')
+  const cacheContent = JSON.parse(cacheFileContent)
+  return cacheContent
+}
+
+const setCacheFileContent = async function (cacheFile, versions) {
+  const lastUpdate = Date.now()
+  const cacheContent = { lastUpdate, versions }
+  const cacheFileContent = `${JSON.stringify(cacheContent, null, 2)}\n`
 
   try {
-    await writeFileAtomic(cacheFile, versionsStr)
+    await writeFileAtomic(cacheFile, cacheFileContent)
     // If two different functions are calling `normalize-node-version` at the
     // same time and there's no cache file, they will both try to persist the
     // file and one might fail, especially on Windows (with EPERM lock file
     // errors)
   } catch {}
-}
-
-const getCacheFileContent = function (versions) {
-  const lastUpdate = Date.now()
-  return { lastUpdate, versions }
 }
 
 // The cache is persisted to `GLOBAL_CACHE_DIR/nve/versions.json`.
