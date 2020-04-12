@@ -17,6 +17,5 @@ const DEFAULT_OPTS = () => ({
 const EXAMPLE_OPTS = () => ({
   ...DEFAULT_OPTS(),
   // Passed to `fetch-node-website`
-  progress: false,
   mirror: 'https://nodejs.org/dist',
 })
