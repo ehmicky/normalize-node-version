@@ -1,3 +1,10 @@
+# 8.0.0
+
+## Breaking changes
+
+- Replace the `cache` option with the more advanced
+  [`fetch` option](/README.md#fetch)
+
 # 7.1.0
 
 ## Features
