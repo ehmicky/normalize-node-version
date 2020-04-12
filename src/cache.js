@@ -14,6 +14,7 @@ import writeFileAtomic from 'write-file-atomic'
 export const getCachedVersions = async function (versionRange) {
   const cacheFile = await getCacheFile()
   const cacheStat = await getCacheStat(cacheFile)
+
   const cachedVersions = await getFileCachedVersions({
     versionRange,
     cacheFile,
