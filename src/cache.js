@@ -2,30 +2,28 @@ import { promises as fs } from 'fs'
 import { env } from 'process'
 
 import globalCacheDir from 'global-cache-dir'
-import { clean, maxSatisfying, major } from 'semver'
 import writeFileAtomic from 'write-file-atomic'
 
-// We cache the HTTP request. The cache needs to be invalidated sometimes since
-// new Node versions are made available every week. We only invalidate it when
-// the requested `versionRange` targets the latest Node version.
-// The cache is persisted to `GLOBAL_CACHE_DIR/nve/versions.json`.
+// We cache the HTTP request. It only lasts one hour (except offline)
+// to make sure we include new Node versions made available every week.
 // Also we also cache it in-memory so it's performed only once per process.
 // If the `cache` option is `false`, we do not read/write cache.
-export const getCachedVersions = async function (versionRange) {
+export const getCachedVersions = async function (offline = false) {
   const cacheFile = await getCacheFile()
   const cacheStat = await getCacheStat(cacheFile)
 
-  const cachedVersions = await retrieveCachedVersions({
-    versionRange,
+  const cachedVersions = await retrieveCachedVersions(
     cacheFile,
     cacheStat,
-  })
+    offline,
+  )
 
   await updateCacheAtime(cachedVersions, cacheFile, cacheStat)
 
   return { cacheFile, cachedVersions }
 }
 
+// The cache is persisted to `GLOBAL_CACHE_DIR/nve/versions.json`.
 const getCacheFile = async function () {
   const cacheDir = await globalCacheDir(CACHE_DIR)
   const cacheFilename = env.TEST_CACHE_FILENAME || CACHE_FILENAME
@@ -41,20 +39,12 @@ const getCacheStat = async function (cacheFile) {
   } catch {}
 }
 
-const retrieveCachedVersions = async function ({
-  versionRange,
-  cacheFile,
-  cacheStat,
-}) {
+const retrieveCachedVersions = async function (cacheFile, cacheStat, offline) {
   if (currentCachedVersions !== undefined && !env.TEST_CACHE_FILENAME) {
     return currentCachedVersions
   }
 
-  const cachedVersions = await getCachedContent(
-    cacheFile,
-    cacheStat,
-    versionRange,
-  )
+  const cachedVersions = await getCachedContent(cacheFile, cacheStat, offline)
 
   if (cachedVersions === undefined) {
     return
@@ -69,52 +59,18 @@ const retrieveCachedVersions = async function ({
 // eslint-disable-next-line fp/no-let, init-declarations
 let currentCachedVersions
 
-const getCachedContent = async function (cacheFile, cacheStat, versionRange) {
-  if (cacheStat === undefined) {
+// We invalidate the version every hour, except when offline
+const getCachedContent = async function (cacheFile, cacheStat, offline) {
+  if (cacheStat === undefined || shouldInvalidate(cacheStat, offline)) {
     return
   }
 
-  const versions = JSON.parse(await fs.readFile(cacheFile, 'utf8'))
-
-  if (!isCachedVersion(versionRange, versions, cacheStat)) {
-    return
-  }
-
-  return versions
+  const cacheContent = await fs.readFile(cacheFile, 'utf8')
+  return JSON.parse(cacheContent)
 }
 
-// We invalidate cache if:
-//  - the version is missing
-//  - the version is a range matching the last version of a major release.
-//    E.g. `12` matches the last `12.*.*` but new versions might have been
-//    released. This is cached for one hour, which is refreshed on each access.
-const isCachedVersion = function (versionRange, versions, cacheStat) {
-  if (versionRange === undefined) {
-    return true
-  }
-
-  const version = maxSatisfying(versions, versionRange)
-  const isMissing = version === null
-  return (
-    !isMissing &&
-    !(
-      isRange(versionRange) &&
-      isLastVersion(version, versions) &&
-      isOldCache(cacheStat)
-    )
-  )
-}
-
-const isRange = function (versionRange) {
-  return clean(versionRange) === null
-}
-
-const isLastVersion = function (version, versions) {
-  const majorVersion = major(version)
-  const maxVersion = versions.find(
-    (versionA) => major(versionA) === majorVersion,
-  )
-  return version === maxVersion
+const shouldInvalidate = function (cacheStat, offline) {
+  return isOldCache(cacheStat) && !offline
 }
 
 const isOldCache = function ({ atimeMs }) {

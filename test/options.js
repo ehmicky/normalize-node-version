@@ -3,12 +3,21 @@ import { each } from 'test-each'
 
 import normalizeNodeVersion from '../src/main.js'
 
+import {
+  MAJOR_VERSION,
+  TOO_HIGH_VERSION,
+  INVALID_VERSION,
+} from './helpers/versions.js'
+
 each(
   [
     {},
-    { versionRange: 'not_a_version_range' },
-    { versionRange: '50' },
-    { versionRange: '4', opts: { mirror: 'not_valid_url', cache: false } },
+    { versionRange: INVALID_VERSION },
+    { versionRange: TOO_HIGH_VERSION },
+    {
+      versionRange: MAJOR_VERSION,
+      opts: { mirror: 'not_valid_url', cache: false },
+    },
     { opts: { cache: null } },
     { opts: { cwd: true } },
   ],

@@ -10,41 +10,38 @@ import {
   unsetTestCache,
   writeCacheFile,
 } from './helpers/cache.js'
+import { MAJOR_VERSION, LOW_VERSION } from './helpers/versions.js'
 
 // See `test/cache.js` for why tests are serial
-each(
-  [
-    { versions: ['4.0.0'], input: '4', cache: true },
-    { versions: ['4.0.0'], input: '4', cache: false },
-  ],
-  ({ title }, { versions, input, cache }) => {
-    test.serial(`Offline | ${title}`, async (t) => {
-      setTestCache()
+each([true, false], ({ title }, cache) => {
+  test.serial(`Offline | ${title}`, async (t) => {
+    setTestCache()
 
-      try {
-        const cacheFile = await writeCacheFile(versions)
+    try {
+      const cacheFile = await writeCacheFile([LOW_VERSION])
 
-        const version = await normalizeNodeVersion(input)
-        const offlineVersion = await normalizeNodeVersion(input, {
-          cache,
-          mirror: INVALID_MIRROR,
-        })
+      const version = await normalizeNodeVersion(MAJOR_VERSION)
+      const offlineVersion = await normalizeNodeVersion(MAJOR_VERSION, {
+        cache,
+        mirror: INVALID_MIRROR,
+      })
 
-        t.is(version, offlineVersion)
+      t.is(version, offlineVersion)
 
-        await fs.unlink(cacheFile)
-      } finally {
-        unsetTestCache()
-      }
-    })
-  },
-)
+      await fs.unlink(cacheFile)
+    } finally {
+      unsetTestCache()
+    }
+  })
+})
 
 test.serial(`Offline | no cache`, async (t) => {
   setTestCache()
 
   try {
-    await t.throwsAsync(normalizeNodeVersion('4', { mirror: INVALID_MIRROR }))
+    await t.throwsAsync(
+      normalizeNodeVersion(MAJOR_VERSION, { mirror: INVALID_MIRROR }),
+    )
   } finally {
     unsetTestCache()
   }

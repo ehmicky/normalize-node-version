@@ -3,23 +3,25 @@ import { each } from 'test-each'
 
 import normalizeNodeVersion from '../src/main.js'
 
-test('Success', async (t) => {
-  const version = await normalizeNodeVersion('4')
+import { MAJOR_VERSION, FULL_VERSION, RANGES } from './helpers/versions.js'
 
-  t.is(version, '4.9.1')
+test('Success', async (t) => {
+  const version = await normalizeNodeVersion(MAJOR_VERSION)
+
+  t.is(version, FULL_VERSION)
 })
 
 test('Twice in same process', async (t) => {
-  await normalizeNodeVersion('4')
-  const version = await normalizeNodeVersion('4')
+  await normalizeNodeVersion(MAJOR_VERSION)
+  const version = await normalizeNodeVersion(MAJOR_VERSION)
 
-  t.is(version, '4.9.1')
+  t.is(version, FULL_VERSION)
 })
 
-each(['4.*', '<5'], ({ title }, versionRange) => {
+each(RANGES, ({ title }, versionRange) => {
   test(`Versions range | ${title}`, async (t) => {
     const version = await normalizeNodeVersion(versionRange)
 
-    t.is(version, '4.9.1')
+    t.is(version, FULL_VERSION)
   })
 })

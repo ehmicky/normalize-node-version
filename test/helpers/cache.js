@@ -15,7 +15,7 @@ export const unsetTestCache = function () {
   delete env.TEST_CACHE_FILENAME
 }
 
-export const writeCacheFile = async function (versions, old) {
+export const writeCacheFile = async function (versions, oldCacheFile) {
   const cacheDir = await globalCacheDir(CACHE_DIR)
   const cacheFile = `${cacheDir}/${env.TEST_CACHE_FILENAME}`
 
@@ -23,7 +23,7 @@ export const writeCacheFile = async function (versions, old) {
     await fs.writeFile(cacheFile, JSON.stringify(versions))
   }
 
-  if (old) {
+  if (oldCacheFile) {
     await fs.utimes(cacheFile, 0, 0)
   }
 

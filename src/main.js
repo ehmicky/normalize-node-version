@@ -9,8 +9,10 @@ import { getOpts } from './options.js'
 // Retrieve the Node version matching a specific `versionRange`
 const normalizeNodeVersion = async function (versionRange, opts) {
   const { cwd, ...optsA } = getOpts(opts)
-  const versionRangeA = await resolveAlias(versionRange, { cwd })
-  const versions = await getVersions(versionRangeA, optsA)
+  const [versionRangeA, versions] = await Promise.all([
+    resolveAlias(versionRange, { cwd }),
+    getVersions(optsA),
+  ])
 
   const version = maxSatisfying(versions, versionRangeA)
 
@@ -22,12 +24,12 @@ const normalizeNodeVersion = async function (versionRange, opts) {
 }
 
 // Retrieve all available Node versions
-const getVersions = async function (versionRange, { cache, ...opts }) {
+const getVersions = async function ({ cache, ...opts }) {
   if (!cache) {
     return getAllVersions(opts)
   }
 
-  const { cachedVersions, cacheFile } = await getCachedVersions(versionRange)
+  const { cachedVersions, cacheFile } = await getCachedVersions()
 
   if (cachedVersions !== undefined) {
     return cachedVersions

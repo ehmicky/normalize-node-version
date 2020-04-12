@@ -7,9 +7,10 @@ import normalizeNodeVersion from '../src/main.js'
 
 import {
   setTestCache,
-  unsetTestCache,
   writeCacheFile,
+  unsetTestCache,
 } from './helpers/cache.js'
+import { MAJOR_VERSION, LOW_VERSION, FULL_VERSION } from './helpers/versions.js'
 
 // This uses a global environment variable to manipulate the cache file.
 // Since this is global we:
@@ -18,48 +19,33 @@ import {
 //    the other tests
 each(
   [
-    // No cache
-    { versions: undefined, input: '4', output: '4.9.1', cache: true },
-    // `cache: false` option
-    { versions: ['4.0.0', '1.2.3'], input: '4', output: '4.9.1', cache: false },
+    // `cache: true`
+    { result: true, option: true },
     // `cache` option default value
-    { versions: ['4.0.0', '1.2.3'], input: '4', output: '4.0.0' },
-    // Non-last version -> cache
-    {
-      versions: ['4.0.0', '1.2.3', '1.1.3'],
-      input: '1.1',
-      output: '1.1.3',
-      cache: true,
-    },
-    // Last version but no range -> cache
-    {
-      versions: ['4.0.0', '1.2.3'],
-      input: '4.0.0',
-      output: '4.0.0',
-      cache: true,
-    },
-    // Last version with range -> cache if recent cache file
-    { versions: ['4.0.0', '1.2.3'], input: '4', output: '4.0.0', cache: true },
-    // Last version with range -> no cache if old cache file
-    {
-      versions: ['4.0.0', '1.2.3'],
-      input: '4',
-      output: '4.9.1',
-      old: true,
-      cache: true,
-    },
-    // Above last version -> no cache
-    { versions: ['3.0.0', '1.2.3'], input: '4', output: '4.9.1', cache: true },
+    { result: true },
+    // `cache: false` option
+    { result: false, option: false },
+    // No cache file
+    { result: false, option: true, noCacheFile: true },
+    // Old cache file
+    { result: false, option: true, oldCacheFile: true },
   ],
-  ({ title }, { versions, input, output, old, cache }) => {
+  (
+    { title },
+    { result, option, oldCacheFile = false, noCacheFile = false },
+  ) => {
     test.serial(`Caching | ${title}`, async (t) => {
       setTestCache()
 
       try {
-        const cacheFile = await writeCacheFile(versions, old)
+        const versions = noCacheFile ? undefined : [LOW_VERSION]
+        const cacheFile = await writeCacheFile(versions, oldCacheFile)
 
-        const version = await normalizeNodeVersion(input, { cache })
+        const version = await normalizeNodeVersion(MAJOR_VERSION, {
+          cache: option,
+        })
 
+        const output = result ? LOW_VERSION : FULL_VERSION
         t.is(version, output)
 
         await fs.unlink(cacheFile)
