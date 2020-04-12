@@ -1,9 +1,19 @@
+# 8.0.1
+
+## Dependencies
+
+- Fix removing `core-js`
+
 # 8.0.0
 
 ## Breaking changes
 
 - Replace the `cache` option with the more advanced
   [`fetch` option](/README.md#fetch)
+
+## Dependencies
+
+- Remove `core-js`
 
 # 7.1.0
 
