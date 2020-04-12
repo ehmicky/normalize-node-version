@@ -15,7 +15,7 @@ export const getCachedVersions = async function (versionRange) {
   const cacheFile = await getCacheFile()
   const cacheStat = await getCacheStat(cacheFile)
 
-  const cachedVersions = await getFileCachedVersions({
+  const cachedVersions = await retrieveCachedVersions({
     versionRange,
     cacheFile,
     cacheStat,
@@ -41,7 +41,7 @@ const getCacheStat = async function (cacheFile) {
   } catch {}
 }
 
-const getFileCachedVersions = async function ({
+const retrieveCachedVersions = async function ({
   versionRange,
   cacheFile,
   cacheStat,
