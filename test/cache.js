@@ -1,3 +1,5 @@
+import { promises as fs } from 'fs'
+
 import test from 'ava'
 import { each } from 'test-each'
 
@@ -7,7 +9,6 @@ import {
   setTestCache,
   unsetTestCache,
   writeCacheFile,
-  removeCacheFile,
 } from './helpers/cache.js'
 
 // This uses a global environment variable to manipulate the cache file.
@@ -61,7 +62,7 @@ each(
 
         t.is(version, output)
 
-        await removeCacheFile(cacheFile, cache)
+        await fs.unlink(cacheFile)
       } finally {
         unsetTestCache()
       }

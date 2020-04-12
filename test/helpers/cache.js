@@ -16,7 +16,7 @@ export const unsetTestCache = function () {
 }
 
 export const writeCacheFile = async function (versions, old) {
-  const cacheDir = await globalCacheDir('normalize-node-version')
+  const cacheDir = await globalCacheDir(CACHE_DIR)
   const cacheFile = `${cacheDir}/${env.TEST_CACHE_FILENAME}`
 
   if (versions !== undefined) {
@@ -30,10 +30,4 @@ export const writeCacheFile = async function (versions, old) {
   return cacheFile
 }
 
-export const removeCacheFile = async function (cacheFile, cache) {
-  if (!cache) {
-    return
-  }
-
-  await fs.unlink(cacheFile)
-}
+const CACHE_DIR = 'normalize-node-version'

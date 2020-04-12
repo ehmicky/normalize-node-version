@@ -1,3 +1,5 @@
+import { promises as fs } from 'fs'
+
 import test from 'ava'
 import { each } from 'test-each'
 
@@ -7,7 +9,6 @@ import {
   setTestCache,
   unsetTestCache,
   writeCacheFile,
-  removeCacheFile,
 } from './helpers/cache.js'
 
 // See `test/cache.js` for why tests are serial
@@ -31,7 +32,7 @@ each(
 
         t.is(version, offlineVersion)
 
-        await removeCacheFile(cacheFile, cache)
+        await fs.unlink(cacheFile)
       } finally {
         unsetTestCache()
       }

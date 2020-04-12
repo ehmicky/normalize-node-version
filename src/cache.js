@@ -24,7 +24,12 @@ export const getCachedVersions = async function (versionRange) {
     cacheStat,
     versionRange,
   )
-  return { cachedVersions, cacheFile }
+
+  if (cachedVersions !== undefined) {
+    return { cachedVersions }
+  }
+
+  return { cacheFile }
 }
 
 // eslint-disable-next-line fp/no-let, init-declarations
