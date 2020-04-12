@@ -1,3 +1,9 @@
+# 9.0.1
+
+## Dependencies
+
+- Upgrade `all-node-versions`
+
 # 9.0.0
 
 ## Breaking changes
