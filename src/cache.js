@@ -76,10 +76,6 @@ const getCachedContent = async function (cacheFile, cacheStat, versionRange) {
 
   const versions = JSON.parse(await fs.readFile(cacheFile, 'utf8'))
 
-  if (versionRange === undefined) {
-    return versions
-  }
-
   if (!isCachedVersion(versionRange, versions, cacheStat)) {
     return
   }
@@ -93,6 +89,10 @@ const getCachedContent = async function (cacheFile, cacheStat, versionRange) {
 //    E.g. `12` matches the last `12.*.*` but new versions might have been
 //    released. This is cached for one hour, which is refreshed on each access.
 const isCachedVersion = function (versionRange, versions, cacheStat) {
+  if (versionRange === undefined) {
+    return true
+  }
+
   const version = maxSatisfying(versions, versionRange)
   const isMissing = version === null
   return (
