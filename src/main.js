@@ -8,8 +8,8 @@ import { getOpts } from './options.js'
 
 // Retrieve the Node version matching a specific `versionRange`
 const normalizeNodeVersion = async function (versionRange, opts) {
-  const { cwd, ...optsA } = getOpts(opts)
-  const versionRangeA = await resolveAlias(versionRange, { cwd })
+  const { cwd, nvmDir, ...optsA } = getOpts(opts)
+  const versionRangeA = await resolveAlias(versionRange, { cwd, nvmDir })
   const versions = await getVersions(versionRangeA, optsA)
 
   const version = maxSatisfying(versions, versionRangeA)

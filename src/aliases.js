@@ -1,5 +1,8 @@
 import { version as processVersion } from 'process'
 
+import { validRange } from 'semver'
+
+import { replaceAliases } from './alias.js'
 import { getProjectVersion } from './project.js'
 
 // `versionRange` can be one of the following aliases:
@@ -8,11 +11,15 @@ import { getProjectVersion } from './project.js'
 export const resolveAlias = function (versionRange, opts) {
   const getVersion = ALIASES[versionRange]
 
-  if (getVersion === undefined) {
-    return versionRange
+  if (getVersion !== undefined) {
+    return getVersion(opts)
   }
 
-  return getVersion(opts)
+  if (!validRange(versionRange) && opts.nvmDir) {
+    return replaceAliases(versionRange, opts)
+  }
+
+  return versionRange
 }
 
 const getCurrentVersion = function () {

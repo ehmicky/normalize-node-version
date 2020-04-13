@@ -25,6 +25,7 @@ await normalizeNodeVersion('<7') // '6.17.1'
 await normalizeNodeVersion('*') // Latest Node version, e.g. '12.8.0'
 await normalizeNodeVersion('_') // Node version used by current process
 await normalizeNodeVersion('.') // Node version from a '.nvmrc', '.node-version' or '.naverc' file in the current directory or any parent directory
+await normalizeNodeVersion('default') // Nvm default version, if nvm is available
 await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
 
 // All available options
@@ -84,6 +85,14 @@ _Default_: `process.cwd()`
 
 When using the [`.` alias](#supported-aliases), start looking for a Node.js
 version file from this directory.
+
+#### nvmDir
+
+_Type_: `string`\
+_Default_: `process.env.NVM_DIR`
+
+Override to specify what path to consider for Nvm directory. Defaults to content
+of `NVM_DIR` environment variable that nvm makes point to the `.nvm` directory
 
 # See also
 

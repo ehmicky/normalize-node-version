@@ -14,7 +14,15 @@ const VERSIONS = {
   nvmrc: '4.2.6',
   nodeVersion: '4.3.2',
   current: versions.node,
+  NVM: {
+    carbon: '8.17.0',
+    node: '12.16.2',
+    personal: '12.12.0',
+    default: '10.10.0',
+  },
 }
+
+const NVM_OPTS = { nvmDir: `${FIXTURES_DIR}/nvm-dir` }
 
 each(
   [
@@ -28,6 +36,20 @@ each(
     { versionRange: '.', fixture: 'mixed', result: VERSIONS.nodeVersion },
     { versionRange: '.', opts: { cwd: '/' }, result: VERSIONS.current },
     { versionRange: '_', result: VERSIONS.current },
+    { versionRange: 'node', opts: NVM_OPTS, result: VERSIONS.NVM.node },
+    { versionRange: 'stable', opts: NVM_OPTS, result: VERSIONS.NVM.node },
+    { versionRange: 'latest', opts: NVM_OPTS, result: VERSIONS.NVM.node },
+    { versionRange: 'default', opts: NVM_OPTS, result: VERSIONS.NVM.default },
+    {
+      versionRange: 'personal-alias',
+      opts: NVM_OPTS,
+      result: VERSIONS.NVM.personal,
+    },
+    { versionRange: 'lts/carbon', opts: NVM_OPTS, result: VERSIONS.NVM.carbon },
+    // implicit lts prefix for lts node codenames
+    { versionRange: 'carbon', opts: NVM_OPTS, result: VERSIONS.NVM.carbon },
+    // recursive resolving
+    { versionRange: 'carbon14', opts: NVM_OPTS, result: VERSIONS.NVM.carbon },
   ],
   ({ title }, { versionRange, opts, fixture, result }) => {
     test(`Resolve aliases | ${title}`, async (t) => {
@@ -38,6 +60,28 @@ each(
     })
   },
 )
+
+test('Resolve nvm aliases ignored if no NVM_DIR configured', async (t) => {
+  await t.throwsAsync(
+    () =>
+      normalizeNodeVersion('default', {
+        nvmDir: '',
+      }),
+    { message: 'Invalid Node version: default' },
+  )
+})
+
+test('Resolved  nvm alias fails and do not loop infinitely if alias cycle is present', async (t) => {
+  const AVA_TIMEOUT_CYCLE = 2000
+  t.timeout(AVA_TIMEOUT_CYCLE)
+  await t.throwsAsync(() => normalizeNodeVersion('cycle', NVM_OPTS), {
+    message: 'Nvm alias cycle detected cycle -> ping -> pong -> ping',
+  })
+})
+
+test('Resolve nvm aliases fails if nvm alias does not exists', async (t) => {
+  await t.throwsAsync(() => normalizeNodeVersion('awol', NVM_OPTS))
+})
 
 test.serial('Option cwd defaults to the current directory', async (t) => {
   const currentCwd = getCwd()

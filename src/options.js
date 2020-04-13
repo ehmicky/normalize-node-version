@@ -1,4 +1,4 @@
-import { cwd as getCwd } from 'process'
+import { cwd as getCwd, env as processEnv } from 'process'
 
 import { validate } from 'jest-validate'
 
@@ -12,6 +12,7 @@ export const getOpts = function (opts = {}) {
 const DEFAULT_OPTS = () => ({
   cache: true,
   cwd: getCwd(),
+  nvmDir: processEnv.NVM_DIR,
 })
 
 const EXAMPLE_OPTS = () => ({
