@@ -52,7 +52,7 @@
   "dependencies": {
     "all-node-versions": "^8.0.0",
     "filter-obj": "^2.0.1",
-    "jest-validate": "^25.3.0",
+    "jest-validate": "^25.4.0",
     "semver": "^7.3.2"
   },
   "devDependencies": {
