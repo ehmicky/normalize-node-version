@@ -1,18 +1,14 @@
 import allNodeVersions from 'all-node-versions'
 import { maxSatisfying } from 'semver'
 
-import { resolveAlias } from './aliases.js'
 import { getOpts } from './options.js'
 
 // Retrieve the Node version matching a specific `versionRange`
 const normalizeNodeVersion = async function (versionRange, opts) {
-  const { cwd, ...allNodeVersionsOpts } = getOpts(opts)
-  const [{ versions }, versionRangeA] = await Promise.all([
-    allNodeVersions(allNodeVersionsOpts),
-    resolveAlias(versionRange, { cwd }),
-  ])
+  const { allNodeVersionsOpts } = getOpts(opts)
+  const { versions } = await allNodeVersions(allNodeVersionsOpts)
 
-  const version = maxSatisfying(versions, versionRangeA)
+  const version = maxSatisfying(versions, versionRange)
 
   if (version === null) {
     throw new Error(`Invalid Node version: ${versionRange}`)
