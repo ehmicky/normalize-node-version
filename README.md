@@ -7,7 +7,8 @@
 
 Normalize and validate Node.js versions.
 
-Can load the current project's version using its [`.nvmrc`](#supported-aliases).
+Takes any version range as inputs such as `8`, `8.5.0` or `>=8` and returns a
+`"major.minor.patch"` string. Throws if the Node.js version does not exist.
 
 # Example
 
@@ -20,16 +21,16 @@ const normalizeNodeVersion = require('normalize-node-version')
 await normalizeNodeVersion('8') // '8.16.0'
 await normalizeNodeVersion('8.5.0') // '8.5.0'
 await normalizeNodeVersion('v8.5.0') // '8.5.0'
-await normalizeNodeVersion('8.5.2') // Error: Invalid Node version
 await normalizeNodeVersion('<7') // '6.17.1'
-await normalizeNodeVersion('latest') // Latest Node version, e.g. '12.8.0'
-await normalizeNodeVersion('current') // Node version from any '.nvmrc' or `package.json` in the current directory, parent directories or home directory
+await normalizeNodeVersion('8.5.2') // Error: Invalid Node version
 await normalizeNodeVersion('not_a_version') // Error: Invalid Node version
 
 // All available options
 await normalizeNodeVersion('8', {
-  fetch: true,
+  // Use a mirror for Node.js binaries
   mirror: 'https://npm.taobao.org/mirrors/node',
+  // Do not cache the list of available Node.js versions
+  fetch: true,
 })
 ```
 
@@ -44,17 +45,8 @@ npm install normalize-node-version
 ## normalizeNodeVersion(versionRange, options?)
 
 `versionRange`: `string`\
-`options`: `object`\
+`options`: `object?`\
 _Returns_: `Promise<string>`
-
-### Supported aliases
-
-`versionRange` can be one of the following aliases:
-
-- `latest` or `l`: Latest available Node version
-- `current` or `c`: Node version from a `.nvmrc`, `.node-version` or `.naverc`
-  file in the current directory or any parent directory. Defaults to the current
-  process's Node version
 
 ### options
 
@@ -79,14 +71,6 @@ The list of available Node.js versions is cached for one hour by default. If the
 
 - `true`: the cache will not be used
 - `false`: the cache will be used even if it's older than one hour
-
-#### cwd
-
-_Type_: `string`\
-_Default_: `process.cwd()`
-
-When using the [`.` alias](#supported-aliases), start looking for a Node.js
-version file from this directory.
 
 # See also
 

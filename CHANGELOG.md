@@ -1,3 +1,13 @@
+# 10.0.0
+
+## Breaking changes
+
+- Remove aliases support (like `latest`): please use
+  [`node-version-alias`](https://github.com/ehmicky/node-version-alias) or
+  [`preferred-node-version`](https://github.com/ehmicky/preferred-node-version)
+  instead.
+- Remove `cwd` option
+
 # 9.0.1
 
 ## Dependencies
