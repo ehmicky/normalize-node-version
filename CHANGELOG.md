@@ -85,7 +85,7 @@
 ## Breaking changes
 
 - Set the
-  [`cache` option](https://github.com/ehmicky/normalize-node-version/blob/master/README.md#cache)
+  [`cache` option](https://github.com/ehmicky/normalize-node-version/blob/main/README.md#cache)
   default value to `true`.
 
 # 5.1.1
@@ -105,7 +105,7 @@
 ## Breaking changes
 
 - Add the
-  [`cache` option](https://github.com/ehmicky/normalize-node-version/blob/master/README.md#cache)
+  [`cache` option](https://github.com/ehmicky/normalize-node-version/blob/main/README.md#cache)
   to cache the HTTP request made to retrieve the list of available Node.js
   versions. This defaults to `false`.
 
@@ -150,7 +150,7 @@
 ## Features
 
 - Add the
-  [`progress` option](https://github.com/ehmicky/normalize-node-version/blob/master/README.md#progress).
+  [`progress` option](https://github.com/ehmicky/normalize-node-version/blob/main/README.md#progress).
   That option displays a loading spinner.
 
 # 2.2.3
