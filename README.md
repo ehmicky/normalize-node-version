@@ -17,7 +17,7 @@ Takes any version range as inputs such as `8`, `8.5.0` or `>=8` and returns a
 ```js
 import normalizeNodeVersion from 'normalize-node-version'
 
-await normalizeNodeVersion('8') // '8.16.0'
+await normalizeNodeVersion('8') // '8.17.0'
 await normalizeNodeVersion('8.5.0') // '8.5.0'
 await normalizeNodeVersion('v8.5.0') // '8.5.0'
 await normalizeNodeVersion('<7') // '6.17.1'
