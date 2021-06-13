@@ -4,7 +4,8 @@ import { maxSatisfying } from 'semver'
 import { getOpts } from './options.js'
 
 // Retrieve the Node version matching a specific `versionRange`
-const normalizeNodeVersion = async function (versionRange, opts) {
+// eslint-disable-next-line import/no-default-export
+export default async function normalizeNodeVersion(versionRange, opts) {
   const { allNodeVersionsOpts } = getOpts(opts)
   const { versions } = await allNodeVersions(allNodeVersionsOpts)
 
@@ -16,7 +17,3 @@ const normalizeNodeVersion = async function (versionRange, opts) {
 
   return version
 }
-
-// We do not use `export default` because Babel transpiles it in a way that
-// requires CommonJS users to `require(...).default` instead of `require(...)`.
-module.exports = normalizeNodeVersion
