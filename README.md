@@ -15,7 +15,7 @@ Takes any version range as inputs such as `8`, `8.5.0` or `>=8` and returns a
 <!-- eslint-skip -->
 
 ```js
-const normalizeNodeVersion = require('normalize-node-version')
+import normalizeNodeVersion from 'normalize-node-version'
 
 await normalizeNodeVersion('8') // '8.16.0'
 await normalizeNodeVersion('8.5.0') // '8.5.0'
