@@ -1,5 +1,4 @@
 import test from 'ava'
-// eslint-disable-next-line node/no-extraneous-import
 import normalizeNodeVersion from 'normalize-node-version'
 import { each } from 'test-each'
 
