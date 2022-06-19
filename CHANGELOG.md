@@ -1,3 +1,9 @@
+# 12.1.1
+
+## Dependencies
+
+- Upgrade [`all-node-versions`](https://github.com/ehmicky/all-node-versions)
+
 # 12.1.0
 
 ## Features
