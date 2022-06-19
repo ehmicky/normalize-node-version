@@ -7,12 +7,17 @@ import { getOpts } from './options.js'
 export default async function normalizeNodeVersion(versionRange, opts) {
   const { allNodeVersionsOpts } = getOpts(opts)
   const { versions } = await allNodeVersions(allNodeVersionsOpts)
+  const versionsA = versions.map(getNodeVersion)
 
-  const version = semver.maxSatisfying(versions, versionRange)
+  const version = semver.maxSatisfying(versionsA, versionRange)
 
   if (version === null) {
     throw new Error(`Invalid Node version: ${versionRange}`)
   }
 
   return version
+}
+
+const getNodeVersion = function ({ node }) {
+  return node
 }
