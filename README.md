@@ -11,9 +11,6 @@ Takes any version range as inputs such as `8`, `8.5.0` or `>=8` and returns a
 
 # Example
 
-<!-- Remove 'eslint-skip' once estree supports top-level await -->
-<!-- eslint-skip -->
-
 ```js
 import normalizeNodeVersion from 'normalize-node-version'
 
