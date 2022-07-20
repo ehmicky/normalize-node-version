@@ -1,8 +1,9 @@
+import { expectType, expectError, expectAssignable } from 'tsd'
+
 import normalizeNodeVersion, {
   Options,
   SemverVersion,
-} from 'normalize-node-version'
-import { expectType, expectError, expectAssignable } from 'tsd'
+} from './main.js'
 
 expectType<SemverVersion>(await normalizeNodeVersion('1'))
 expectError(await normalizeNodeVersion())
