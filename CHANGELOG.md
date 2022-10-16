@@ -1,3 +1,9 @@
+# 12.3.0
+
+## Features
+
+- Reduce npm package size
+
 # 12.2.0
 
 ## Features

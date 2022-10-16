@@ -13,6 +13,7 @@ each(
     {},
     { versionRange: INVALID_VERSION },
     { versionRange: TOO_HIGH_VERSION },
+    { opts: true },
     {
       versionRange: FULL_VERSION,
       opts: { mirror: 'not_valid_url', fetch: true },

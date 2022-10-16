@@ -48,7 +48,6 @@
   "dependencies": {
     "all-node-versions": "^11.2.0",
     "filter-obj": "^5.1.0",
-    "jest-validate": "^29.0.1",
     "semver": "^7.3.7"
   },
   "devDependencies": {
