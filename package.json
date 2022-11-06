@@ -1,6 +1,6 @@
 {
   "name": "normalize-node-version",
-  "version": "12.3.0",
+  "version": "12.4.0",
   "type": "module",
   "exports": {
     "types": "./build/types/main.d.ts",
