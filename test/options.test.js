@@ -6,7 +6,7 @@ import {
   FULL_VERSION,
   TOO_HIGH_VERSION,
   INVALID_VERSION,
-} from './helpers/versions.js'
+} from './helpers/versions.test.js'
 
 each(
   [
