@@ -2,7 +2,7 @@ import allNodeVersions from 'all-node-versions'
 import semver from 'semver'
 
 // Retrieve the Node version matching a specific `versionRange`
-export default async function normalizeNodeVersion(versionRange, opts) {
+const normalizeNodeVersion = async (versionRange, opts) => {
   const { versions } = await allNodeVersions(opts)
   const versionsA = versions.map(getNodeVersion)
 
@@ -15,6 +15,6 @@ export default async function normalizeNodeVersion(versionRange, opts) {
   return version
 }
 
-const getNodeVersion = function ({ node }) {
-  return node
-}
+export default normalizeNodeVersion
+
+const getNodeVersion = ({ node }) => node
