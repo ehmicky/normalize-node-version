@@ -56,7 +56,7 @@
     "semver": "^7.5.0"
   },
   "devDependencies": {
-    "@ehmicky/dev-tasks": "^2.0.75",
+    "@ehmicky/dev-tasks": "^2.0.76",
     "test-each": "^5.7.1"
   },
   "engines": {
