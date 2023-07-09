@@ -1,3 +1,9 @@
+# 13.1.0
+
+## Features
+
+- Add a [`signal` option](README.md#signal) to cancel
+
 # 13.0.0
 
 ## Breaking changes
