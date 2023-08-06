@@ -42,7 +42,10 @@
   ],
   "license": "Apache-2.0",
   "homepage": "https://www.github.com/ehmicky/normalize-node-version",
-  "repository": "ehmicky/normalize-node-version",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ehmicky/normalize-node-version.git"
+  },
   "bugs": {
     "url": "https://github.com/ehmicky/normalize-node-version/issues"
   },
