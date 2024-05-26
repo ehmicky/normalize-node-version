@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "all-node-versions": "^13.0.0",
-    "filter-obj": "^5.1.0",
+    "filter-obj": "^6.1.0",
     "semver": "^7.5.4"
   },
   "devDependencies": {
