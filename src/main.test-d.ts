@@ -2,7 +2,7 @@ import normalizeNodeVersion, {
   type Options,
   type SemverVersion,
 } from 'normalize-node-version'
-import { expectType, expectAssignable } from 'tsd'
+import { expectAssignable, expectType } from 'tsd'
 
 expectType<SemverVersion>(await normalizeNodeVersion('1'))
 // @ts-expect-error
